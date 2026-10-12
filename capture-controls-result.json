@@ -1,0 +1,43 @@
+{
+  "ok": true,
+  "initial": {
+    "camera": "关闭",
+    "tracking": "停止"
+  },
+  "stoppedTracking": {
+    "camera": true,
+    "tracking": false
+  },
+  "reopenTracking": {
+    "menu": [
+      "面部",
+      "身体",
+      "身体 + 手部",
+      "面部 + 身体",
+      "全身 (MediaPipe Vision)",
+      "全身 (Legacy Holistic)",
+      "动作捕捉设定",
+      "取消"
+    ],
+    "label": "开启"
+  },
+  "stoppedCamera": {
+    "camera": false,
+    "tracking": false,
+    "tracks": [
+      "ended"
+    ],
+    "stream": null
+  },
+  "reopenCamera": {
+    "menu": 4,
+    "label": "开启"
+  },
+  "final": {
+    "camera": true,
+    "tracking": true,
+    "mode": "Full Body",
+    "width": 1280,
+    "height": 720
+  }
+}

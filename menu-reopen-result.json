@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "cycles": [
+    {
+      "closed": true,
+      "reopenButton": true,
+      "reopened": true,
+      "motionBefore": "Mixamo - Sitting02",
+      "motionAfter": "stand_simple",
+      "motionChanged": true,
+      "camera": false,
+      "tracking": false
+    },
+    {
+      "closed": true,
+      "reopenButton": true,
+      "reopened": true,
+      "motionBefore": "chair_sit01_armIK",
+      "motionAfter": "stand_simple",
+      "motionChanged": true,
+      "camera": false,
+      "tracking": false
+    },
+    {
+      "closed": true,
+      "reopenButton": true,
+      "reopened": true,
+      "motionBefore": "Mixamo - Sitting Idle01",
+      "motionAfter": "stand_simple",
+      "motionChanged": true,
+      "camera": false,
+      "tracking": false
+    }
+  ]
+}

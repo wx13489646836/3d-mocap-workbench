@@ -1,0 +1,29 @@
+Bundled additional avatar assets
+
+Robert, Polybot and Kyle
+Creator: Polygonal Mind
+Collection: 100Avatars R1
+License: CC0 1.0 Universal. Both original VRM files embed licenseName: CC0.
+The VRM files are included unmodified. The selection thumbnails are local render captures.
+License text: CC0-LICENSE.txt
+Registry and author-published source: https://github.com/ToxSam/open-source-avatars
+Collection license: https://raw.githubusercontent.com/ToxSam/open-source-avatars/main/data/projects.json
+Asset metadata: https://raw.githubusercontent.com/ToxSam/open-source-avatars/main/data/avatars/100avatars-r1.json
+Robert download: https://arweave.net/gwG7w4bY-A5c3R6A6GOz3xBCgbPvkFQmqPIDtvnNsYI
+Polybot download: https://arweave.net/DUR8v-IugXppdMBxPdE1rDO2dZCJJ7ZgBTXSRgPJFNo
+Kyle download: https://arweave.net/0E5wEEVl5VGCcuGVQylq3dpC3TClLR3JhuhEyhYh7NQ
+
+Alicia Solid remains the existing engine-bundled default model. Its original license
+and author information remain in engine/AT_SystemAnimator_v110350.gadget/three.js/model/AliciaSolid.zip.
+The additional models' CC0 license does not replace the existing model's license.
+
+Rocketbox Realistic Male (replaces Kyle in the built-in selection)
+Source model: Microsoft Rocketbox Male_Adult_01_facial.fbx
+Copyright: Microsoft and the Microsoft Rocketbox contributors.
+License: MIT; retained in Rocketbox-LICENSE.txt.
+Source: https://github.com/microsoft/Microsoft-Rocketbox
+Asset: https://github.com/microsoft/Microsoft-Rocketbox/tree/master/Assets/Avatars/Adults/Male_Adult_01
+Changes: FBX converted to VRM 1.0; unit transforms applied; A-pose converted to T-pose;
+all original face shape keys preserved; blink, vowel and emotion expressions mapped;
+diffuse and normal maps connected to PBR materials. Local render capture used as thumbnail.
+Conversion source is saved in the workspace's work/convert-rocketbox.py.

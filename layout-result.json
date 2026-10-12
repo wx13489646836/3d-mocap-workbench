@@ -1,0 +1,395 @@
+{
+  "ok": true,
+  "pages": [
+    {
+      "page": "overview",
+      "width": 1380,
+      "height": 820,
+      "checked": 18,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "model",
+      "width": 1380,
+      "height": 820,
+      "checked": 15,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "pose",
+      "width": 1380,
+      "height": 820,
+      "checked": 37,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "settings",
+      "width": 1380,
+      "height": 820,
+      "checked": 24,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "camera",
+      "width": 1380,
+      "height": 820,
+      "checked": 22,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "tracking",
+      "width": 1380,
+      "height": 820,
+      "checked": 26,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "vmc",
+      "width": 1380,
+      "height": 820,
+      "checked": 29,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "overview",
+      "width": 1280,
+      "height": 740,
+      "checked": 18,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "model",
+      "width": 1280,
+      "height": 740,
+      "checked": 15,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "pose",
+      "width": 1280,
+      "height": 740,
+      "checked": 37,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "settings",
+      "width": 1280,
+      "height": 740,
+      "checked": 24,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "camera",
+      "width": 1280,
+      "height": 740,
+      "checked": 22,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "tracking",
+      "width": 1280,
+      "height": 740,
+      "checked": 26,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "vmc",
+      "width": 1280,
+      "height": 740,
+      "checked": 29,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "overview",
+      "width": 1100,
+      "height": 740,
+      "checked": 18,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "model",
+      "width": 1100,
+      "height": 740,
+      "checked": 15,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "pose",
+      "width": 1100,
+      "height": 740,
+      "checked": 37,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "settings",
+      "width": 1100,
+      "height": 740,
+      "checked": 24,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "camera",
+      "width": 1100,
+      "height": 740,
+      "checked": 22,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "tracking",
+      "width": 1100,
+      "height": 740,
+      "checked": 26,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "vmc",
+      "width": 1100,
+      "height": 740,
+      "checked": 29,
+      "overflow": false,
+      "inspectorScrolls": true,
+      "problems": []
+    },
+    {
+      "page": "overview",
+      "width": 1040,
+      "height": 680,
+      "checked": 18,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "model",
+      "width": 1040,
+      "height": 680,
+      "checked": 15,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "pose",
+      "width": 1040,
+      "height": 680,
+      "checked": 37,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "settings",
+      "width": 1040,
+      "height": 680,
+      "checked": 24,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "camera",
+      "width": 1040,
+      "height": 680,
+      "checked": 22,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "tracking",
+      "width": 1040,
+      "height": 680,
+      "checked": 26,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "vmc",
+      "width": 1040,
+      "height": 680,
+      "checked": 29,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "overview",
+      "width": 768,
+      "height": 600,
+      "checked": 18,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "model",
+      "width": 768,
+      "height": 600,
+      "checked": 15,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "pose",
+      "width": 768,
+      "height": 600,
+      "checked": 37,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "settings",
+      "width": 768,
+      "height": 600,
+      "checked": 24,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "camera",
+      "width": 768,
+      "height": 600,
+      "checked": 22,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "tracking",
+      "width": 768,
+      "height": 600,
+      "checked": 26,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "vmc",
+      "width": 768,
+      "height": 600,
+      "checked": 29,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "overview",
+      "width": 375,
+      "height": 700,
+      "checked": 17,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "model",
+      "width": 375,
+      "height": 700,
+      "checked": 14,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "pose",
+      "width": 375,
+      "height": 700,
+      "checked": 36,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "settings",
+      "width": 375,
+      "height": 700,
+      "checked": 23,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "camera",
+      "width": 375,
+      "height": 700,
+      "checked": 21,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "tracking",
+      "width": 375,
+      "height": 700,
+      "checked": 25,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    },
+    {
+      "page": "vmc",
+      "width": 375,
+      "height": 700,
+      "checked": 28,
+      "overflow": false,
+      "inspectorScrolls": false,
+      "problems": []
+    }
+  ],
+  "checks": [
+    {
+      "lastVisible": true,
+      "scrollTop": 847.2000122070312,
+      "controlHeight": 1249,
+      "controlScrollHeight": 1249
+    }
+  ],
+  "capture": {
+    "camera": false,
+    "tracking": false
+  }
+}

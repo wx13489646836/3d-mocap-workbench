@@ -1,0 +1,58 @@
+{
+  "ok": true,
+  "total": 33,
+  "noPagination": true,
+  "search": [
+    "坐姿 17上半身"
+  ],
+  "selected": "sitting_sexy12",
+  "standVariants": [
+    [
+      "stand_simple|full"
+    ],
+    [
+      "stand_simple|upper"
+    ]
+  ],
+  "walkCount": 3,
+  "empty": true,
+  "locate": {
+    "before": 0,
+    "after": 0,
+    "visible": true,
+    "searchVisible": true
+  },
+  "layouts": [
+    {
+      "width": 1380,
+      "overflow": false,
+      "listHeight": 199,
+      "controlsOverflow": false
+    },
+    {
+      "width": 1040,
+      "overflow": false,
+      "listHeight": 199,
+      "controlsOverflow": false
+    },
+    {
+      "width": 768,
+      "overflow": false,
+      "listHeight": 326,
+      "controlsOverflow": false
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "listHeight": 326,
+      "controlsOverflow": false
+    }
+  ],
+  "reopen": true,
+  "errors": [],
+  "final": {
+    "motion": "prone_pose01",
+    "camera": false,
+    "tracking": false
+  }
+}

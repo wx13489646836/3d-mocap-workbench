@@ -1,0 +1,216 @@
+{
+  "ok": true,
+  "initial": {
+    "ready": true,
+    "camera": false,
+    "tracking": false,
+    "paused": false,
+    "avatarVisible": false,
+    "motion": "standmix2_modified",
+    "model": "默认人物",
+    "captureAllowed": false,
+    "menu": null,
+    "section": "overview"
+  },
+  "motionBefore": "standmix2_modified",
+  "motionAfter": "stand_simple",
+  "poseOptions": [
+    {
+      "key": 1,
+      "sbIndex": 0,
+      "label": "✔️Stand relaxed",
+      "closing": false
+    },
+    {
+      "key": 2,
+      "sbIndex": 0,
+      "label": "Stand simple (💃➔全身动捕)",
+      "closing": false
+    },
+    {
+      "key": 3,
+      "sbIndex": 0,
+      "label": "Stand simple (🙋➔上半身动捕)",
+      "closing": false
+    },
+    {
+      "key": 4,
+      "sbIndex": 0,
+      "label": "Standby (🙋)",
+      "closing": false
+    },
+    {
+      "key": 5,
+      "sbIndex": 0,
+      "label": "Happy idle (🙋)",
+      "closing": false
+    },
+    {
+      "key": 6,
+      "sbIndex": 0,
+      "label": "I-shaped balance (🙋)",
+      "closing": false
+    },
+    {
+      "key": 7,
+      "sbIndex": 0,
+      "label": "Sit 01 (🙋/🦶)",
+      "closing": false
+    },
+    {
+      "key": 8,
+      "sbIndex": 0,
+      "label": "Sit 02 (🦶/🙋)",
+      "closing": false
+    },
+    {
+      "key": 9,
+      "sbIndex": 0,
+      "label": "Sit 03 (🙋/🦶)",
+      "closing": false
+    },
+    {
+      "key": "A",
+      "sbIndex": 1,
+      "label": "┣ 腰部调整设的设定集: 预设⬅️➡️",
+      "closing": false
+    },
+    {
+      "key": "B",
+      "sbIndex": 1,
+      "label": "┣ 镜像化现在的姿势 (Ctrl+M)",
+      "closing": false
+    },
+    {
+      "key": "C",
+      "sbIndex": 1,
+      "label": "┣ 置顶现在的姿势",
+      "closing": false
+    },
+    {
+      "key": "D",
+      "sbIndex": 1,
+      "label": "┗ 汇出现在姿势的设定",
+      "closing": false
+    },
+    {
+      "key": "E",
+      "sbIndex": 1,
+      "label": "肩角度补正: 预设",
+      "closing": false
+    },
+    {
+      "key": "F",
+      "sbIndex": 1,
+      "label": "还原姿势列表的顺序",
+      "closing": false
+    },
+    {
+      "key": "G",
+      "sbIndex": 1,
+      "label": "清空所有自订动作",
+      "closing": false
+    },
+    {
+      "key": "N",
+      "sbIndex": 1,
+      "label": "下一页动作",
+      "closing": false
+    },
+    {
+      "key": "X",
+      "sbIndex": 1,
+      "label": "结束",
+      "closing": true
+    }
+  ],
+  "settingsOptions": [
+    {
+      "key": 1,
+      "sbIndex": 0,
+      "label": "介面及重叠覆盖",
+      "closing": false
+    },
+    {
+      "key": 2,
+      "sbIndex": 0,
+      "label": "场景(背景/3D等)",
+      "closing": false
+    },
+    {
+      "key": 3,
+      "sbIndex": 0,
+      "label": "视觉效果",
+      "closing": false
+    },
+    {
+      "key": 4,
+      "sbIndex": 0,
+      "label": "其他选项",
+      "closing": false
+    },
+    {
+      "key": 5,
+      "sbIndex": 0,
+      "label": "将动作汇出成档案",
+      "closing": false
+    },
+    {
+      "key": 6,
+      "sbIndex": 0,
+      "label": "关於 XR Animator",
+      "closing": false
+    },
+    {
+      "key": 7,
+      "sbIndex": 0,
+      "label": "取消",
+      "closing": true
+    }
+  ],
+  "ui": {
+    "buttons": 38,
+    "missingLabels": 0,
+    "preview": 1200,
+    "status": "引擎已就绪"
+  },
+  "interactions": {
+    "searchMatches": 3,
+    "empty": true,
+    "frozen": true,
+    "restored": true,
+    "zoomReset": true,
+    "selected": true
+  },
+  "responsive": [
+    {
+      "width": 1380,
+      "overflow": false,
+      "stageWidth": 782.4000244140625,
+      "searchVisible": true
+    },
+    {
+      "width": 1040,
+      "overflow": false,
+      "stageWidth": 497.20001220703125,
+      "searchVisible": true
+    },
+    {
+      "width": 768,
+      "overflow": false,
+      "stageWidth": 531.2000122070312,
+      "searchVisible": true
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "stageWidth": 326.3999938964844,
+      "searchVisible": true
+    }
+  ],
+  "reducedMotion": true,
+  "finalCaptureState": {
+    "camera": false,
+    "tracking": false
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "model": "default",
+      "visiblePixels": 40412,
+      "bounds": [
+        480,
+        104,
+        719,
+        607
+      ],
+      "fullyVisible": true
+    },
+    {
+      "model": "robert",
+      "visiblePixels": 41761,
+      "bounds": [
+        493,
+        143,
+        710,
+        588
+      ],
+      "fullyVisible": true
+    },
+    {
+      "model": "polybot",
+      "visiblePixels": 67366,
+      "bounds": [
+        486,
+        107,
+        713,
+        610
+      ],
+      "fullyVisible": true
+    },
+    {
+      "model": "realman",
+      "visiblePixels": 46717,
+      "bounds": [
+        499,
+        87,
+        702,
+        592
+      ],
+      "fullyVisible": true
+    }
+  ]
+}

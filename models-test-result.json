@@ -1,0 +1,271 @@
+{
+  "ok": true,
+  "results": [
+    {
+      "id": "default",
+      "model": "默认少女",
+      "path": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\engine\\AT_SystemAnimator_v110350.gadget/three.js/model/AliciaSolid.zip#/AliciaSolid.vrm",
+      "name": "Alicia Solid",
+      "sceneVisible": true,
+      "expressions": [
+        "neutral",
+        "aa",
+        "ih",
+        "ou",
+        "ee",
+        "oh",
+        "blink",
+        "happy",
+        "angry",
+        "sad",
+        "relaxed",
+        "lookUp",
+        "lookDown",
+        "lookLeft",
+        "lookRight",
+        "blinkLeft",
+        "blinkRight"
+      ],
+      "modelCount": 1,
+      "camera": false
+    },
+    {
+      "id": "robert",
+      "model": "罗伯特",
+      "path": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\models\\Robert.vrm",
+      "name": "Robert",
+      "sceneVisible": true,
+      "expressions": [
+        "aa",
+        "ee",
+        "ih",
+        "oh",
+        "ou",
+        "blink"
+      ],
+      "modelCount": 2,
+      "camera": false
+    },
+    {
+      "id": "polybot",
+      "model": "小方机器人",
+      "path": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\models\\Polybot.vrm",
+      "name": "Polybot",
+      "sceneVisible": true,
+      "expressions": [
+        "aa",
+        "ee",
+        "ih",
+        "oh",
+        "ou",
+        "blink"
+      ],
+      "modelCount": 3,
+      "camera": false
+    },
+    {
+      "id": "realman",
+      "model": "写实男性",
+      "path": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\models\\RocketboxMale.vrm",
+      "name": "Rocketbox Realistic Male",
+      "sceneVisible": true,
+      "expressions": [
+        "aa",
+        "ih",
+        "ou",
+        "ee",
+        "oh",
+        "blink",
+        "blinkLeft",
+        "blinkRight",
+        "happy",
+        "sad",
+        "angry",
+        "relaxed",
+        "surprised"
+      ],
+      "modelCount": 4,
+      "camera": false
+    },
+    {
+      "id": "default",
+      "model": "默认少女",
+      "path": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\engine\\AT_SystemAnimator_v110350.gadget/three.js/model/AliciaSolid.zip#/AliciaSolid.vrm",
+      "name": "Alicia Solid",
+      "sceneVisible": true,
+      "expressions": [
+        "neutral",
+        "aa",
+        "ih",
+        "ou",
+        "ee",
+        "oh",
+        "blink",
+        "happy",
+        "angry",
+        "sad",
+        "relaxed",
+        "lookUp",
+        "lookDown",
+        "lookLeft",
+        "lookRight",
+        "blinkLeft",
+        "blinkRight"
+      ],
+      "modelCount": 4,
+      "camera": false
+    },
+    {
+      "id": "realman",
+      "model": "写实男性",
+      "path": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\models\\RocketboxMale.vrm",
+      "name": "Rocketbox Realistic Male",
+      "sceneVisible": true,
+      "expressions": [
+        "aa",
+        "ih",
+        "ou",
+        "ee",
+        "oh",
+        "blink",
+        "blinkLeft",
+        "blinkRight",
+        "happy",
+        "sad",
+        "angry",
+        "relaxed",
+        "surprised"
+      ],
+      "modelCount": 4,
+      "camera": false
+    },
+    {
+      "id": "robert",
+      "model": "罗伯特",
+      "path": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\models\\Robert.vrm",
+      "name": "Robert",
+      "sceneVisible": true,
+      "expressions": [
+        "aa",
+        "ee",
+        "ih",
+        "oh",
+        "ou",
+        "blink"
+      ],
+      "modelCount": 4,
+      "camera": false
+    },
+    {
+      "id": "polybot",
+      "model": "小方机器人",
+      "path": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\models\\Polybot.vrm",
+      "name": "Polybot",
+      "sceneVisible": true,
+      "expressions": [
+        "aa",
+        "ee",
+        "ih",
+        "oh",
+        "ou",
+        "blink"
+      ],
+      "modelCount": 4,
+      "camera": false
+    },
+    {
+      "id": "default",
+      "model": "默认少女",
+      "path": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\engine\\AT_SystemAnimator_v110350.gadget/three.js/model/AliciaSolid.zip#/AliciaSolid.vrm",
+      "name": "Alicia Solid",
+      "sceneVisible": true,
+      "expressions": [
+        "neutral",
+        "aa",
+        "ih",
+        "ou",
+        "ee",
+        "oh",
+        "blink",
+        "happy",
+        "angry",
+        "sad",
+        "relaxed",
+        "lookUp",
+        "lookDown",
+        "lookLeft",
+        "lookRight",
+        "blinkLeft",
+        "blinkRight"
+      ],
+      "modelCount": 4,
+      "camera": false
+    }
+  ],
+  "expressions": [
+    {
+      "model": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\engine\\AT_SystemAnimator_v110350.gadget/three.js/model/AliciaSolid.zip#/AliciaSolid.vrm",
+      "expression": "aa",
+      "applied": 0.8
+    },
+    {
+      "model": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\models\\Polybot.vrm",
+      "expression": "aa",
+      "applied": 0.8
+    },
+    {
+      "model": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\models\\RocketboxMale.vrm",
+      "expression": "aa",
+      "applied": 0.8
+    },
+    {
+      "model": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\models\\Robert.vrm",
+      "expression": "aa",
+      "applied": 0.8
+    }
+  ],
+  "layout": {
+    "cards": [
+      {
+        "name": "默认少女日系动漫当前",
+        "label": "切换为默认少女，日系动漫",
+        "pressed": "true",
+        "overflow": false
+      },
+      {
+        "name": "罗伯特卡通人物 · 低多边形",
+        "label": "切换为罗伯特，卡通人物 · 低多边形",
+        "pressed": "false",
+        "overflow": false
+      },
+      {
+        "name": "小方机器人科幻机器人",
+        "label": "切换为小方机器人，科幻机器人",
+        "pressed": "false",
+        "overflow": false
+      },
+      {
+        "name": "写实男性写实人物 · 皮肤与服装纹理",
+        "label": "切换为写实男性，写实人物 · 皮肤与服装纹理",
+        "pressed": "false",
+        "overflow": false
+      }
+    ],
+    "pageOverflow": false
+  },
+  "final": {
+    "ready": true,
+    "camera": false,
+    "tracking": false,
+    "paused": false,
+    "avatarVisible": true,
+    "motion": "standmix2_modified",
+    "model": "默认少女",
+    "modelId": "default",
+    "captureAllowed": false,
+    "menu": null,
+    "visualEffects": null,
+    "section": "model",
+    "legacyOpen": false
+  }
+}

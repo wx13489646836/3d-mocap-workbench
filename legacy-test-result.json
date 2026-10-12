@@ -1,0 +1,37 @@
+{
+  "ok": true,
+  "opened": {
+    "state": {
+      "ready": true,
+      "camera": false,
+      "tracking": false,
+      "paused": false,
+      "avatarVisible": true,
+      "motion": "standmix2_modified",
+      "model": "默认人物",
+      "captureAllowed": false,
+      "menu": null,
+      "section": "overview",
+      "legacyOpen": true
+    },
+    "opacity": 1,
+    "label": "关闭原版高级窗口"
+  },
+  "closed": {
+    "state": {
+      "ready": true,
+      "camera": false,
+      "tracking": false,
+      "paused": false,
+      "avatarVisible": true,
+      "motion": "standmix2_modified",
+      "model": "默认人物",
+      "captureAllowed": false,
+      "menu": null,
+      "section": "overview",
+      "legacyOpen": false
+    },
+    "opacity": 0,
+    "label": "打开原版高级窗口"
+  }
+}

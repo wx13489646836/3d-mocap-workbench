@@ -1,0 +1,587 @@
+{
+  "title": "Controls",
+  "controls": [],
+  "folders": [
+    {
+      "title": "Light and camera",
+      "controls": [],
+      "folders": [
+        {
+          "title": "Directional Light Parameters",
+          "controls": [
+            {
+              "id": "visual/f0/f0/c0",
+              "label": "color",
+              "type": "color",
+              "value": "#606060",
+              "disabled": false
+            },
+            {
+              "id": "visual/f0/f0/c1",
+              "label": "x",
+              "type": "number",
+              "value": 0,
+              "min": -1,
+              "max": 1,
+              "step": 0.002,
+              "disabled": false
+            },
+            {
+              "id": "visual/f0/f0/c2",
+              "label": "y",
+              "type": "number",
+              "value": 1,
+              "min": -1,
+              "max": 1,
+              "step": 0.002,
+              "disabled": false
+            },
+            {
+              "id": "visual/f0/f0/c3",
+              "label": "z",
+              "type": "number",
+              "value": 0,
+              "min": -1,
+              "max": 1,
+              "step": 0.002,
+              "disabled": false
+            },
+            {
+              "id": "visual/f0/f0/c4",
+              "label": "reset",
+              "type": "function",
+              "value": null,
+              "disabled": false
+            }
+          ],
+          "folders": []
+        },
+        {
+          "title": "Camera",
+          "controls": [
+            {
+              "id": "visual/f0/f1/c0",
+              "label": "FOV (main camera)",
+              "type": "number",
+              "value": 50,
+              "min": 30,
+              "max": 120,
+              "step": 1,
+              "disabled": false
+            },
+            {
+              "id": "visual/f0/f1/c1",
+              "label": "FOV (hand camera)",
+              "type": "number",
+              "value": 60,
+              "min": 30,
+              "max": 120,
+              "step": 1,
+              "disabled": false
+            },
+            {
+              "id": "visual/f0/f1/c2",
+              "label": "reset",
+              "type": "function",
+              "value": null,
+              "disabled": false
+            }
+          ],
+          "folders": []
+        }
+      ]
+    },
+    {
+      "title": "Post-Processing Effects",
+      "controls": [
+        {
+          "id": "visual/f1/c0",
+          "label": "enabled",
+          "type": "boolean",
+          "value": true,
+          "disabled": false
+        }
+      ],
+      "folders": [
+        {
+          "title": "Unreal Bloom (Selective) Parameters",
+          "controls": [
+            {
+              "id": "visual/f1/f0/c0",
+              "label": "enabled",
+              "type": "boolean",
+              "value": true,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f0/c1",
+              "label": "bloomThreshold",
+              "type": "number",
+              "value": 0.43,
+              "min": 0,
+              "max": 1,
+              "step": 0.001,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f0/c2",
+              "label": "bloomStrength",
+              "type": "number",
+              "value": 0.4,
+              "min": 0,
+              "max": 10,
+              "step": 0.01,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f0/c3",
+              "label": "bloomRadius",
+              "type": "number",
+              "value": 0.4,
+              "min": 0,
+              "max": 1,
+              "step": 0.01,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f0/c4",
+              "label": "reset",
+              "type": "function",
+              "value": null,
+              "disabled": false
+            }
+          ],
+          "folders": [
+            {
+              "title": "VRM Specific Parameters",
+              "controls": [
+                {
+                  "id": "visual/f1/f0/f0/c0",
+                  "label": "bloom_factor",
+                  "type": "number",
+                  "value": 0.2,
+                  "min": 0,
+                  "max": 1,
+                  "step": 0.001,
+                  "disabled": false
+                },
+                {
+                  "id": "visual/f1/f0/f0/c1",
+                  "label": "RimFresnelPower",
+                  "type": "number",
+                  "value": 1,
+                  "min": 0,
+                  "max": 5,
+                  "step": 0.005,
+                  "disabled": false
+                },
+                {
+                  "id": "visual/f1/f0/f0/c2",
+                  "label": "RimLift",
+                  "type": "number",
+                  "value": 1,
+                  "min": 0,
+                  "max": 5,
+                  "step": 0.005,
+                  "disabled": false
+                },
+                {
+                  "id": "visual/f1/f0/f0/c3",
+                  "label": "reset",
+                  "type": "function",
+                  "value": null,
+                  "disabled": false
+                }
+              ],
+              "folders": []
+            }
+          ]
+        },
+        {
+          "title": "SSAO (Selective) Parameters",
+          "controls": [
+            {
+              "id": "visual/f1/f1/c0",
+              "label": "enabled",
+              "type": "boolean",
+              "value": false,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f1/c1",
+              "label": "quality",
+              "type": "option",
+              "value": "Medium",
+              "disabled": false,
+              "options": [
+                {
+                  "label": "Performance",
+                  "index": 0,
+                  "selected": false
+                },
+                {
+                  "label": "Low",
+                  "index": 1,
+                  "selected": false
+                },
+                {
+                  "label": "Medium",
+                  "index": 2,
+                  "selected": true
+                },
+                {
+                  "label": "High",
+                  "index": 3,
+                  "selected": false
+                },
+                {
+                  "label": "Ultra",
+                  "index": 4,
+                  "selected": false
+                }
+              ]
+            },
+            {
+              "id": "visual/f1/f1/c2",
+              "label": "aoSamples",
+              "type": "number",
+              "value": 16,
+              "min": 1,
+              "max": 64,
+              "step": 1,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f1/c3",
+              "label": "denoiseSamples",
+              "type": "number",
+              "value": 8,
+              "min": 1,
+              "max": 64,
+              "step": 1,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f1/c4",
+              "label": "denoiseRadius",
+              "type": "number",
+              "value": 12,
+              "min": 0,
+              "max": 24,
+              "step": 0.01,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f1/c5",
+              "label": "aoRadius",
+              "type": "number",
+              "value": 3,
+              "min": 1,
+              "max": 64,
+              "step": 0.01,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f1/c6",
+              "label": "distanceFalloff",
+              "type": "number",
+              "value": 0.6,
+              "min": 0,
+              "max": 2,
+              "step": 0.01,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f1/c7",
+              "label": "intensity",
+              "type": "number",
+              "value": 5,
+              "min": 0,
+              "max": 10,
+              "step": 0.01,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f1/c8",
+              "label": "color",
+              "type": "color",
+              "value": "#000000",
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f1/c9",
+              "label": "halfRes",
+              "type": "boolean",
+              "value": true,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f1/c10",
+              "label": "renderMode",
+              "type": "option",
+              "value": "Combined",
+              "disabled": false,
+              "options": [
+                {
+                  "label": "Combined",
+                  "index": 0,
+                  "selected": true
+                },
+                {
+                  "label": "AO",
+                  "index": 1,
+                  "selected": false
+                },
+                {
+                  "label": "No AO",
+                  "index": 2,
+                  "selected": false
+                },
+                {
+                  "label": "Split",
+                  "index": 3,
+                  "selected": false
+                },
+                {
+                  "label": "Split AO",
+                  "index": 4,
+                  "selected": false
+                }
+              ]
+            },
+            {
+              "id": "visual/f1/f1/c11",
+              "label": "reset",
+              "type": "function",
+              "value": null,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f1/c12",
+              "label": "reset",
+              "type": "function",
+              "value": null,
+              "disabled": false
+            }
+          ],
+          "folders": [
+            {
+              "title": "VRM Specific Parameters",
+              "controls": [
+                {
+                  "id": "visual/f1/f1/f0/c0",
+                  "label": "AO opacity",
+                  "type": "number",
+                  "value": 1,
+                  "min": 0,
+                  "max": 1,
+                  "step": 0.001,
+                  "disabled": false
+                },
+                {
+                  "id": "visual/f1/f1/f0/c1",
+                  "label": "AO color",
+                  "type": "color",
+                  "value": "#804020",
+                  "disabled": false
+                }
+              ],
+              "folders": []
+            }
+          ]
+        },
+        {
+          "title": "Depth of Field Parameters",
+          "controls": [
+            {
+              "id": "visual/f1/f2/c0",
+              "label": "enabled",
+              "type": "boolean",
+              "value": false,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c1",
+              "label": "fstop",
+              "type": "number",
+              "value": 2.2,
+              "min": 0.1,
+              "max": 22,
+              "step": 0.001,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c2",
+              "label": "maxblur",
+              "type": "number",
+              "value": 2,
+              "min": 0,
+              "max": 5,
+              "step": 0.025,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c3",
+              "label": "showFocus",
+              "type": "boolean",
+              "value": false,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c4",
+              "label": "manualdof",
+              "type": "boolean",
+              "value": false,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c5",
+              "label": "vignetting",
+              "type": "boolean",
+              "value": false,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c6",
+              "label": "depthblur",
+              "type": "boolean",
+              "value": false,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c7",
+              "label": "threshold",
+              "type": "number",
+              "value": 0.5,
+              "min": 0,
+              "max": 1,
+              "step": 0.001,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c8",
+              "label": "gain",
+              "type": "number",
+              "value": 1,
+              "min": 0,
+              "max": 100,
+              "step": 0.001,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c9",
+              "label": "bias",
+              "type": "number",
+              "value": 0.5,
+              "min": 0,
+              "max": 3,
+              "step": 0.001,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c10",
+              "label": "fringe",
+              "type": "number",
+              "value": 0.7,
+              "min": 0,
+              "max": 5,
+              "step": 0.001,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c11",
+              "label": "noise",
+              "type": "boolean",
+              "value": true,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c12",
+              "label": "dithering",
+              "type": "number",
+              "value": 0.0001,
+              "min": 0,
+              "max": 0.001,
+              "step": 0.0001,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c13",
+              "label": "pentagon",
+              "type": "boolean",
+              "value": false,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c14",
+              "label": "rings",
+              "type": "number",
+              "value": 3,
+              "min": 1,
+              "max": 8,
+              "step": 1,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c15",
+              "label": "samples",
+              "type": "number",
+              "value": 4,
+              "min": 1,
+              "max": 13,
+              "step": 1,
+              "disabled": false
+            },
+            {
+              "id": "visual/f1/f2/c16",
+              "label": "focus target",
+              "type": "option",
+              "value": "Auto",
+              "disabled": false,
+              "options": [
+                {
+                  "label": "Auto",
+                  "index": 0,
+                  "selected": true
+                },
+                {
+                  "label": "Head",
+                  "index": 1,
+                  "selected": false
+                },
+                {
+                  "label": "Chest",
+                  "index": 2,
+                  "selected": false
+                },
+                {
+                  "label": "Hands",
+                  "index": 3,
+                  "selected": false
+                },
+                {
+                  "label": "Feet",
+                  "index": 4,
+                  "selected": false
+                },
+                {
+                  "label": "Screen center",
+                  "index": 5,
+                  "selected": false
+                }
+              ]
+            },
+            {
+              "id": "visual/f1/f2/c17",
+              "label": "reset",
+              "type": "function",
+              "value": null,
+              "disabled": false
+            }
+          ],
+          "folders": []
+        }
+      ]
+    }
+  ]
+}

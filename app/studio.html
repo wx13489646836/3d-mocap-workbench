@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self'; script-src 'self'"><title>3D动捕工作台</title><link rel="stylesheet" href="studio.css"></head>
+<body>
+<a class="skip-link" href="#workspace-main">跳转到工作区</a>
+<link rel="stylesheet" href="studio-v2.css">
+<div class="app">
+  <aside class="sidebar" aria-label="主导航">
+
+    <p class="nav-label">工作空间</p>
+    <nav>
+      <button data-page="overview" aria-current="page"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3zM9 20v-7h6v7"/></svg>总览</button>
+      <button data-page="model"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 21v-3a8 8 0 0 1 16 0v3"/></svg>人物与模型</button>
+      <button data-page="pose"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="14" cy="4" r="2"/><path d="m4 10 6-2 4 4 6-3M10 8l-1 7-5 6m5-6 6 2 2 4"/></svg>动作与姿态</button>
+      <button data-page="settings"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="16" cy="9" r="2"/><path d="m3 18 6-7 6 7 3-3 3 3"/></svg>场景与设置</button>
+    </nav>
+    <p class="nav-label">输入与输出</p>
+    <nav>
+      <button data-page="camera"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/></svg>视频输入<i>关闭</i></button>
+      <button data-page="tracking"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8V3h5m8 0h5v5m0 8v5h-5M8 21H3v-5"/><circle cx="12" cy="10" r="3"/><path d="M7 18a5 5 0 0 1 10 0"/></svg>动作捕捉<i>关闭</i></button>
+      <button data-page="vmc"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 7H4l-3 5 3 5h6m4-10h6l3 5-3 5h-6m-7-5h10"/></svg>VMC 连接</button>
+      <button data-page="output"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4m-3-10h6m-3-3 3 3-3 3"/></svg>视频输出<i id="output-nav-status">关闭</i></button>
+    </nav>
+    <div class="sidebar-bottom"><button id="legacy" class="subtle">打开原版高级窗口</button></div>
+  </aside>
+  <main id="workspace-main" tabindex="-1">
+    <header><div><h1 id="page-title">总览</h1><p id="page-description">人物、输入与输出的状态，一眼看清。</p></div><div class="header-status"><span class="dot" id="status-dot"></span><span id="engine-status" role="status">引擎载入中</span></div></header>
+    <section class="status-grid" aria-label="运行状态">
+      <div class="status-card"><span>渲染引擎</span><strong id="render-status">正在载入</strong></div>
+      <div class="status-card"><span>视频输入</span><strong id="camera-status">未开启</strong></div>
+      <div class="status-card"><span>动作追踪</span><strong id="tracking-status">未开启</strong></div>
+    </section>
+    <div class="workspace">
+      <section class="stage-panel" aria-label="人物预览">
+        <div class="panel-heading"><h2>人物预览</h2><span class="tag" id="preview-status">实时预览</span></div>
+        <div class="stage" id="stage" tabindex="0" aria-label="人物视角：左键拖动旋转，右键拖动平移，滚轮缩放；方向键旋转，Shift 加方向键平移，Home 复位" aria-describedby="viewport-help"><div class="stage-grid"></div><img id="preview" alt="人物实时渲染预览"><div id="loading" class="loading"><span class="loader"></span><strong>正在准备人物</strong><p>首次加载需要稍等片刻</p></div><div class="stage-label"><span class="dot"></span>预览画面 <span id="preview-fps">等待画面</span></div></div>
+        <div class="stage-toolbar"><button id="avatar" disabled>隐藏人物</button><button id="view-reset" disabled>视角复位</button><button id="freeze" aria-pressed="false" disabled>暂停预览</button><button id="pause" disabled hidden>暂停视频</button><div class="zoom-control"><label for="zoom">缩放</label><input id="zoom" type="range" min="80" max="170" value="100"><button id="zoom-reset" title="恢复预览缩放到 100%"><output id="zoom-value">100%</output></button></div></div>
+        <p id="viewport-help" class="viewport-help">左键拖动旋转 · 右键拖动平移 · 滚轮缩放</p><div class="model-detail"><svg class="icon model-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 21v-3a8 8 0 0 1 16 0v3"/></svg><div><strong id="model-name">默认人物</strong><p id="motion-name">等待引擎初始化</p></div><button id="import" class="primary" disabled>导入模型 / 动作</button></div>
+      </section>
+      <aside class="inspector" aria-label="控制面板">
+        <section id="background-card" class="control-card" hidden>
+          <div class="panel-heading"><h2>纯色背景</h2><label class="switch-label"><input id="background-enabled" type="checkbox">启用</label></div>
+          <p class="muted">替换场景背景，颜色会自动保存。关闭后恢复原场景。</p>
+          <form id="background-form"><div class="color-fields"><label>选取颜色<input id="background-color" type="color" value="#00ff00"></label><label>颜色代码<input id="background-hex" type="text" value="#00FF00" pattern="#[0-9a-fA-F]{6}" maxlength="7" required spellcheck="false" aria-describedby="background-tip"></label></div><p id="background-tip" class="help">格式：# 加六位字符，例如 #00FF00。</p><button id="background-apply" type="submit">应用颜色</button></form>
+          <div class="background-presets" aria-label="常用背景颜色"><button data-background="#00ff00">绿幕</button><button data-background="#0000ff">蓝幕</button><button data-background="#ffffff">白色</button><button data-background="#000000">黑色</button><button data-background="#20334c">深蓝</button></div>
+          <p id="background-status" class="help" role="status">原场景背景</p>
+        </section>
+        <section id="output-card" class="control-card" hidden>
+          <div class="panel-heading"><h2>虚拟相机</h2><span id="output-status" class="tag" role="status">未开启</span></div>
+          <p class="muted">把人物画面发送到 OBS，也可用于支持摄像头输入的软件。</p>
+          <label class="output-field" for="output-resolution">输出分辨率<select id="output-resolution"><option value="720p">1280 × 720（流畅）</option><option value="1080p">1920 × 1080（高清）</option></select></label>
+          <dl class="output-details"><div><dt>相机名称</dt><dd>Avatar Camera</dd></div><div><dt>输出帧率</dt><dd id="output-fps">30 帧/秒</dd></div></dl>
+          <button id="output-toggle" class="primary">开启视频输出</button><p id="output-error" class="output-error" role="alert" hidden></p>
+          <div class="output-guide"><h3>在 OBS 中接收</h3><ol><li>来源 → 添加 → 视频采集设备。</li><li>设备选择 <strong>Avatar Camera</strong>。</li><li>分辨率选择“自定义”，与上方输出分辨率一致。</li></ol><p class="help">只输出人物预览画面。暂停预览或最小化工作台，输出仍会继续；关闭软件会停止输出。绿幕可在 OBS 中添加“色度键”滤镜去除。</p></div>
+        </section>
+        <section id="main-controls" class="control-card"><div class="panel-heading"><h2 id="control-title">快捷操作</h2><span id="control-count" class="muted"></span></div><p id="control-description" class="muted">选择左侧功能，设置会在这里展开。</p>
+          <div id="quick-actions" class="quick-actions"><button data-go="pose"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="14" cy="4" r="2"/><path d="m4 10 6-2 4 4 6-3M10 8l-1 7-5 6m5-6 6 2 2 4"/></svg><strong>选择动作</strong><span>站姿、坐姿与待机动画</span></button><button data-go="settings"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="16" cy="9" r="2"/><path d="m3 18 6-7 6 7 3-3 3 3"/></svg><strong>调整场景</strong><span>背景、视觉效果与显示选项</span></button><button data-go="vmc"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 7H4l-3 5 3 5h6m4-10h6l3 5-3 5h-6m-7-5h10"/></svg><strong>连接其他软件</strong><span>VMC 动作发送与接收</span></button></div>
+          <div id="pose-search" class="search-field" hidden><label for="action-search">查找动作</label><input type="search" id="action-search" placeholder="搜索站姿、坐姿…" autocomplete="off"></div><div id="menu-options" class="menu-options"></div><button id="reopen-menu" class="primary" hidden>重新打开动作列表</button><p id="search-empty" class="empty-state" hidden>没有匹配的动作，请换一个关键词。</p>
+          <form id="engine-input" hidden><label for="setting-value">当前设置的输入值</label><input id="setting-value" autocomplete="off" placeholder="按设置说明输入值"><button type="submit">应用输入</button></form>
+          <p id="model-help" hidden class="help">支持 VRM、PMX、PMD 人物，以及 VMD、BVH、FBX 动作。ZIP 文件由原引擎解析。导入后可在人物预览中检查结果。</p>
+          <button id="dismiss" class="subtle" hidden>关闭当前设置</button>
+        </section>
+        <section id="capture-card" class="capture-card" hidden><h2>采集暂未启用</h2><p>可以查看设置入口。只有允许后，才能手动开启视频输入或动作追踪。</p><button id="capture-unlock">允许本次手动开启采集</button></section>
+        <details class="activity-card"><summary>操作记录<span>展开查看</span></summary><div class="log-toolbar"><button id="clear-log" class="text-button">清空记录</button></div><ol id="activity-log"></ol></details>
+        <div class="keyboard-help">Tab 切换控件，Enter 执行操作</div>
+      </aside>
+    </div>
+    <footer><span id="footer-state">采集未开启 · 仅加载人物渲染</span></footer>
+  </main>
+</div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<script src="studio-visual.js"></script><script src="studio-models.js"></script><script src="studio-poses.js"></script><script src="studio-renderer.js"></script><script src="studio-capture.js"></script><script src="studio-viewport.js"></script><script src="studio-output.js"></script>
+</body></html>
+

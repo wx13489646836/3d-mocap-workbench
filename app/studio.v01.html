@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'"><title>XR Animator Studio</title><link rel="stylesheet" href="studio.css"></head>
+<body>
+<link rel="stylesheet" href="studio-polish.css">
+<div class="app">
+  <aside class="sidebar" aria-label="主导航">
+    <div class="brand"><span class="brand-icon">XR</span><div>Animator <strong>Studio</strong><small>人物控制工作台</small></div></div>
+    <p class="nav-label">工作空间</p>
+    <nav>
+      <button data-page="overview" aria-current="page"><span>◈</span>总览</button>
+      <button data-page="model"><span>◇</span>人物与模型</button>
+      <button data-page="pose"><span>↗</span>动作与姿态</button>
+      <button data-page="settings"><span>▦</span>场景与设置</button>
+    </nav>
+    <p class="nav-label">输入与输出</p>
+    <nav>
+      <button data-page="camera"><span>▣</span>视频输入<i>暂停</i></button>
+      <button data-page="tracking"><span>⌘</span>动作捕捉<i>暂停</i></button>
+      <button data-page="vmc"><span>⇄</span>VMC 连接</button>
+    </nav>
+    <div class="sidebar-bottom"><div class="local-badge"><span class="dot"></span>本机运行</div><p>基于 XR Animator 0.35.0<br>Studio 界面预览版 0.1</p><button id="legacy" class="subtle">打开原版高级窗口 ↗</button></div>
+  </aside>
+  <main>
+    <header><div><p class="eyebrow">WORKSPACE</p><h1 id="page-title">总览</h1><p id="page-description">人物、输入与输出的状态，一眼看清。</p></div><div class="header-status"><span class="dot" id="status-dot"></span><span id="engine-status" role="status">引擎载入中</span></div></header>
+    <section class="status-grid" aria-label="运行状态">
+      <div class="status-card"><span>渲染引擎</span><strong id="render-status">正在载入</strong><small>XR Animator</small></div>
+      <div class="status-card"><span>视频输入</span><strong id="camera-status">未开启</strong><small>由你手动启动</small></div>
+      <div class="status-card"><span>动作追踪</span><strong id="tracking-status">未开启</strong><small>面部 · 手部 · 身体</small></div>
+    </section>
+    <div class="workspace">
+      <section class="stage-panel" aria-label="人物预览">
+        <div class="panel-heading"><h2>人物预览</h2><span class="tag">LIVE</span></div>
+        <div class="stage" id="stage"><div class="stage-grid"></div><div class="stage-halo"></div><img id="preview" alt="XR Animator 人物实时渲染预览"><div id="loading" class="loading"><span class="loader"></span><strong>正在准备人物</strong><p>首次加载需要稍等片刻</p></div><div class="stage-label"><span class="dot"></span>实时画面 <span>控制台预览约 6 帧 / 秒</span></div></div>
+        <div class="stage-toolbar"><button id="avatar" disabled>隐藏人物</button><button id="pause" disabled>暂停视频</button><div class="zoom-control"><label for="zoom">预览缩放</label><input id="zoom" type="range" min="80" max="170" value="100"><output id="zoom-value">100%</output></div></div>
+        <div class="model-detail"><span class="model-icon">◇</span><div><strong id="model-name">默认人物</strong><p id="motion-name">等待引擎初始化</p></div><button id="import" class="subtle" disabled>导入模型 / 动作</button></div>
+      </section>
+      <aside class="inspector" aria-label="控制面板">
+        <section class="control-card"><div class="panel-heading"><h2 id="control-title">快捷操作</h2><span id="control-count" class="muted"></span></div><p id="control-description" class="muted">选择左侧功能，设置会在这里展开。</p>
+          <div id="quick-actions" class="quick-actions"><button data-go="pose"><strong>选择动作</strong><span>浏览内置姿态与动画 →</span></button><button data-go="settings"><strong>调整场景</strong><span>背景、灯光与显示选项 →</span></button><button data-go="vmc"><strong>连接其他软件</strong><span>查看 VMC 发送与接收设置 →</span></button></div>
+          <div id="menu-options" class="menu-options"></div>
+          <form id="engine-input" hidden><label for="setting-value">当前设置的输入值</label><input id="setting-value" autocomplete="off" placeholder="按设置说明输入值"><button type="submit">应用输入</button></form>
+          <p id="model-help" hidden class="help">支持 VRM、PMX、PMD 人物，以及 VMD、BVH、FBX 动作。ZIP 文件由原引擎解析。导入后可在人物预览中检查结果。</p>
+          <button id="dismiss" class="subtle" hidden>关闭当前设置</button>
+        </section>
+        <section id="capture-card" class="capture-card" hidden><div class="lock-mark">Ⅱ</div><h2>采集操作已暂停</h2><p>你要求先改界面。现在可查看入口，视频输入和身体追踪不会自动启动。</p><button id="capture-unlock">允许本次手动开启采集</button></section>
+        <section class="activity-card"><div class="panel-heading"><h2>操作记录</h2><button id="clear-log" class="text-button">清空</button></div><ol id="activity-log" aria-live="polite"></ol></section>
+        <section class="hint-card"><strong>更容易操作，也更容易自动化</strong><p>每个动作都有文字名称、稳定控件 ID 和可读状态。Tab 切换焦点，Enter 确认按钮。</p></section>
+      </aside>
+    </div>
+    <footer><span id="footer-state">采集未开启 · 仅加载人物渲染</span><span>独立界面副本</span></footer>
+  </main>
+</div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<script src="studio-renderer.js"></script>
+</body></html>

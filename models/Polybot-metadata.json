@@ -1,0 +1,51 @@
+{
+  "name": "Polybot.vrm",
+  "meta": {
+    "title": "Polybot",
+    "version": "1.0",
+    "author": "Polygonal Mind",
+    "contactInformation": "www.polygonalmind.com",
+    "reference": "",
+    "allowedUserName": "Everyone",
+    "violentUssageName": "Allow",
+    "sexualUssageName": "Allow",
+    "commercialUssageName": "Allow",
+    "otherPermissionUrl": "",
+    "licenseName": "CC0",
+    "otherLicenseUrl": ""
+  },
+  "humanoid": 31,
+  "expressions": [
+    {
+      "name": "A",
+      "preset": "a",
+      "binds": 1
+    },
+    {
+      "name": "E",
+      "preset": "e",
+      "binds": 1
+    },
+    {
+      "name": "I",
+      "preset": "i",
+      "binds": 1
+    },
+    {
+      "name": "O",
+      "preset": "o",
+      "binds": 1
+    },
+    {
+      "name": "U",
+      "preset": "u",
+      "binds": 1
+    },
+    {
+      "name": "Blink",
+      "preset": "blink",
+      "binds": 1
+    }
+  ],
+  "meshes": 1
+}

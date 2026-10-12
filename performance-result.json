@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "baseline": {
+    "fps": 5.284785156382626,
+    "captureMs": 23.019769811320966,
+    "encodeMs": 25.017141509433955,
+    "kilobytesPerFrame": 71.52669885023585
+  },
+  "optimized": {
+    "fps": 26.600938481109612,
+    "captureMs": 0,
+    "encodeMs": 2.474233962264036,
+    "kilobytesPerFrame": 21.73684404481132
+  },
+  "subscriptionActive": true,
+  "camera": false,
+  "tracking": false
+}

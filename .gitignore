@@ -1,0 +1,22 @@
+# Chromium session databases, credentials, locks and disposable caches.
+/user-data/*
+!/user-data/studio-settings.json
+**/__pycache__/
+*.py[cod]
+*.log
+*.tmp
+*.lock
+/runtime/virtual-camera/last-error.log
+/assets/desktop-shortcut.original.lnk
+.env
+.env.*
+!.env.example
+Thumbs.db
+desktop.ini
+
+# Local test screenshots and transient progress; JSON validation reports stay.
+/*-test.png
+/*-preview.png
+/engine-loading.png
+/test-progress.json
+/.backup-manifest.json

@@ -1,0 +1,8 @@
+﻿
+_private/
+TEMP/_config_local/
+node_modules/OSC.js/
+node_modules/OSC-js/
+node_modules/nut.js/
+au3/*.exe
+au3/*/*.exe

@@ -1,0 +1,67 @@
+[
+  {
+    "name": "background-custom-test",
+    "size": [
+      1200,
+      675
+    ],
+    "corner": [
+      18,
+      52,
+      86
+    ],
+    "ok": true
+  },
+  {
+    "name": "output-green-test",
+    "size": [
+      1280,
+      720
+    ],
+    "corner": [
+      0,
+      255,
+      0
+    ],
+    "ok": true
+  },
+  {
+    "name": "output-minimized-test",
+    "size": [
+      1280,
+      720
+    ],
+    "corner": [
+      0,
+      0,
+      255
+    ],
+    "ok": true
+  },
+  {
+    "name": "output-stopped-test",
+    "size": [
+      1280,
+      720
+    ],
+    "corner": [
+      46,
+      255,
+      0
+    ],
+    "ok": true
+  },
+  {
+    "name": "output-hd-test",
+    "size": [
+      1920,
+      1080
+    ],
+    "corner": [
+      0,
+      0,
+      255
+    ],
+    "ok": true
+  }
+]

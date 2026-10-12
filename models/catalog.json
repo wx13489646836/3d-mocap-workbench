@@ -1,0 +1,30 @@
+[
+  {
+    "id": "default",
+    "name": "默认少女",
+    "style": "日系动漫",
+    "file": null,
+    "thumbnail": "AliciaSolid.png"
+  },
+  {
+    "id": "robert",
+    "name": "罗伯特",
+    "style": "卡通人物 · 低多边形",
+    "file": "Robert.vrm",
+    "thumbnail": "Robert.png"
+  },
+  {
+    "id": "polybot",
+    "name": "小方机器人",
+    "style": "科幻机器人",
+    "file": "Polybot.vrm",
+    "thumbnail": "Polybot.png"
+  },
+  {
+    "id": "realman",
+    "name": "写实男性",
+    "style": "写实人物 · 皮肤与服装纹理",
+    "file": "RocketboxMale.vrm",
+    "thumbnail": "RocketboxMale.png"
+  }
+]

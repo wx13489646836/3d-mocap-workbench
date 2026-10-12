@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Robert",
+    "model_file_url": "https://arweave.net/gwG7w4bY-A5c3R6A6GOz3xBCgbPvkFQmqPIDtvnNsYI",
+    "thumbnail_url": "https://arweave.net/gaFPebQ9hSZDa_xNHkja8CH0Qde2y41L95VQTtroWNA",
+    "sha256": "5E3EDAF330577EE4C3F6440B8989AF3722E7C800BB90EB037F1C05CDFE61FD7C",
+    "license": "CC0",
+    "creator": "Polygonal Mind"
+  },
+  {
+    "name": "Polybot",
+    "model_file_url": "https://arweave.net/DUR8v-IugXppdMBxPdE1rDO2dZCJJ7ZgBTXSRgPJFNo",
+    "thumbnail_url": "https://arweave.net/PJ-ovenhR5xdQPv_Z1NkujIpPWjfD_7XENdf7yzHZ_0",
+    "sha256": "E255BACE0D7DE8B5FC90756EFC83E167080E6DB97692F23623FEC5F1C67C423D",
+    "license": "CC0",
+    "creator": "Polygonal Mind"
+  },
+  {
+    "name": "Rocketbox Realistic Male",
+    "creator": "Microsoft Rocketbox",
+    "license": "MIT",
+    "model_file_url": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_01/Export/Male_Adult_01_facial.fbx",
+    "sha256": "78d7a79b09ce080969eddfbdceee909f1347e45b1ed6113f462c1e7af79d1ea9",
+    "converted": true,
+    "conversion_script": "work/convert-rocketbox.py"
+  }
+]

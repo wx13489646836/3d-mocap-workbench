@@ -1,0 +1,7 @@
+  Since XR Animator v0.0.4, all AutoIt-related executables in this directory have been removed, because a few virus scanners keep giving false positive alarms to these files. These files inherit from System Animator, which provides some desktop gadget features which are mostly irrevelant to XR Animator, such as "Stay on desktop".
+
+UPDATE: Since XR Animator v0.0.5, the "Stay on desktop" feature has been re-implemented via the "electron-as-wallpaper" module.
+
+https://github.com/meslzy/electron-as-wallpaper
+
+ 

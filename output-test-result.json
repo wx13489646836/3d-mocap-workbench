@@ -1,0 +1,108 @@
+{
+  "ok": true,
+  "custom": {
+    "body": "rgb(18, 52, 86)",
+    "host": "none"
+  },
+  "invalidRejected": true,
+  "disabled": true,
+  "started": {
+    "running": true,
+    "starting": false,
+    "device": "Avatar Camera",
+    "width": 1280,
+    "height": 720,
+    "fps": 28,
+    "error": ""
+  },
+  "green": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\output-green-test.png",
+  "backgroundOutput": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\output-minimized-test.png",
+  "minimized": true,
+  "stopped": {
+    "running": false,
+    "starting": false,
+    "device": "Avatar Camera",
+    "width": 1280,
+    "height": 720,
+    "fps": 0,
+    "error": ""
+  },
+  "black": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\output-stopped-test.png",
+  "restarted": {
+    "running": true,
+    "starting": false,
+    "device": "Avatar Camera",
+    "width": 1920,
+    "height": 1080,
+    "fps": 28,
+    "error": ""
+  },
+  "hd": "C:\\Users\\14984\\Documents\\Codex\\2026-10-11\\qu\\outputs\\XR-Animator-Studio\\output-hd-test.png",
+  "layouts": [
+    {
+      "page": "settings",
+      "width": 1380,
+      "overflow": false,
+      "fields": false
+    },
+    {
+      "page": "settings",
+      "width": 1040,
+      "overflow": false,
+      "fields": false
+    },
+    {
+      "page": "settings",
+      "width": 768,
+      "overflow": false,
+      "fields": false
+    },
+    {
+      "page": "settings",
+      "width": 375,
+      "overflow": false,
+      "fields": false
+    },
+    {
+      "page": "output",
+      "width": 1380,
+      "overflow": false,
+      "fields": false
+    },
+    {
+      "page": "output",
+      "width": 1040,
+      "overflow": false,
+      "fields": false
+    },
+    {
+      "page": "output",
+      "width": 768,
+      "overflow": false,
+      "fields": false
+    },
+    {
+      "page": "output",
+      "width": 375,
+      "overflow": false,
+      "fields": false
+    }
+  ],
+  "final": {
+    "camera": false,
+    "tracking": false,
+    "background": {
+      "enabled": true,
+      "color": "#00ff00"
+    },
+    "output": {
+      "running": false,
+      "starting": false,
+      "device": "Avatar Camera",
+      "width": 1920,
+      "height": 1080,
+      "fps": 0,
+      "error": ""
+    }
+  }
+}

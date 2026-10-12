@@ -1,0 +1,46 @@
+{
+  "ok": true,
+  "controlCount": 51,
+  "types": [
+    "color",
+    "number",
+    "function",
+    "boolean",
+    "option"
+  ],
+  "numberApplied": true,
+  "booleanApplied": true,
+  "colorApplied": true,
+  "optionApplied": true,
+  "functionApplied": true,
+  "overlaysHidden": true,
+  "layouts": [
+    {
+      "width": 1380,
+      "checked": 79,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 1040,
+      "checked": 79,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 768,
+      "checked": 79,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 375,
+      "checked": 79,
+      "overflow": false,
+      "errors": []
+    }
+  ],
+  "returnedToSettings": true,
+  "camera": false,
+  "tracking": false
+}
