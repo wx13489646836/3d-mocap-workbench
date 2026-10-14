@@ -1,3 +1,4 @@
+require(require('path').join(SA_path,'../../app/stdio-guard.js'))();
 electron.app.setPath("userData",require("path").join(SA_path,"../../user-data"));
 // SA Electron - Main EXTENDED
 // (2025-05-01)

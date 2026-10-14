@@ -1,0 +1,72 @@
+{
+  "ok": true,
+  "imports": [
+    {
+      "format": "FBX ZIP",
+      "static": true,
+      "model": "anime+girl+3d+model.fbx",
+      "ready": true,
+      "status": "没有可识别的人形骨骼，仅供模型展示",
+      "meshes": 151,
+      "textures": 37,
+      "camera": false,
+      "busyLocked": true
+    },
+    {
+      "format": "OBJ ZIP",
+      "static": true,
+      "model": "anime+girl+3d+model.obj",
+      "ready": true,
+      "status": "没有可识别的人形骨骼，仅供模型展示",
+      "meshes": 151,
+      "textures": 37,
+      "camera": false,
+      "busyLocked": true
+    },
+    {
+      "format": "Rigged FBX ZIP",
+      "static": false,
+      "model": "tripo_convert_ee38e29d-57fd-448c-8d58-afb9bc772896.fbx",
+      "ready": true,
+      "status": "已自动转换为人形动捕模型",
+      "meshes": 131,
+      "textures": 2,
+      "camera": false,
+      "busyLocked": true
+    }
+  ],
+  "pose": {
+    "distance": 2.1083724764463243
+  },
+  "errorRecovered": {
+    "disabled": false,
+    "error": "模型转换失败：模型没有可显示的网格",
+    "ready": true
+  },
+  "originalVrm": {
+    "id": "default",
+    "static": false
+  },
+  "additionalFormats": [
+    {
+      "format": "stl",
+      "kind": "static",
+      "exists": true
+    },
+    {
+      "format": "ply",
+      "kind": "static",
+      "exists": true
+    },
+    {
+      "format": "gltf",
+      "kind": "static",
+      "exists": true
+    },
+    {
+      "format": "blend",
+      "kind": "static",
+      "exists": true
+    }
+  ]
+}

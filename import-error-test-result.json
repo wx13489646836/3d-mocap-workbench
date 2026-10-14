@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "pipeWriteSurvived": true,
+  "zip": {
+    "message": "模型转换失败：模型没有可显示的网格",
+    "ready": true,
+    "static": false
+  },
+  "glb": {
+    "message": "静态模型，无人形骨骼",
+    "ready": true,
+    "static": true,
+    "model": "anime-girl.glb",
+    "camera": false,
+    "tracking": false
+  }
+}

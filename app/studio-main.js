@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 module.exports = ({electron, app, engine}) => {
+  require('./stdio-guard')();
   // The upstream animation loop initializes only in a visible native window.
   // Keep its surface alive but transparent and non-interactive; Studio owns input.
   engine.setOpacity(0);
@@ -62,6 +63,7 @@ module.exports = ({electron, app, engine}) => {
     engine.webContents.sendInputEvent(forwarded);
   });
   ipcMain.handle('studio:command',async(event,command,payload={})=>{
+    try {
     if(event.sender!==studio.webContents || !actions.has(command)) throw Error('不支持的操作');
     if(command==='background-set'){
       if(!/^#[0-9a-f]{6}$/i.test(payload.color)||typeof payload.enabled!=='boolean')throw Error('请输入六位颜色代码，例如 #00FF00');
@@ -85,11 +87,24 @@ module.exports = ({electron, app, engine}) => {
     if(command==='legacy'){setLegacy(!legacyMode);return {ok:true,state:await invoke('state')};}
     if(command==='section'&&legacyMode)setLegacy(false);
     if(command==='import') {
-      const result=await dialog.showOpenDialog(studio,{title:'导入人物或动作',properties:['openFile'],filters:[{name:'人物与动作',extensions:['vrm','pmx','pmd','zip','vmd','bvh','fbx']}]});
+      const result=await dialog.showOpenDialog(studio,{title:'导入人物或动作',properties:['openFile'],filters:[{name:'人物、动作与静态模型',extensions:['vrm','pmx','pmd','zip','vmd','bvh','fbx','obj','glb','gltf','stl','ply','blend']}]});
       if(result.canceled)return {ok:true,cancelled:true};
-      return invoke('import',{file:result.filePaths[0]});
+      const checked=await require('./model-import')(result.filePaths[0],{
+        progress:text=>{if(!studio.isDestroyed())studio.webContents.send('studio:import-progress',text);},
+        select:async files=>{
+          const selected=await dialog.showMessageBox(studio,{type:'question',title:'选择 ZIP 中的模型',message:'压缩包包含多个模型或动作，请选择要导入的文件。',buttons:[...files,'取消'],cancelId:files.length,noLink:true});
+          return files[selected.response]||null;
+        }
+      });
+      if(checked.cancelled)return {ok:true,cancelled:true};
+      const loaded=await invoke('import',{file:checked.file,kind:checked.kind,displayName:checked.displayName});
+      return {...loaded,importNote:checked.note,missingTextures:checked.missingTextures||[]};
     }
     return invoke(command,payload);
+    }catch(error){
+      try{fs.appendFileSync(path.join(__dirname,'../user-data/main-errors.log'),new Date().toISOString()+' '+command+' '+(error.stack||error)+'\n');}catch{}
+      return {ok:false,error:error.message||'操作失败，请重试'};
+    }
   });
   const timer=setInterval(async()=>{
     if(inFlight || studio.isDestroyed() || engine.isDestroyed())return;
@@ -158,6 +173,8 @@ module.exports = ({electron, app, engine}) => {
   if(process.argv.includes('--studio-visual-test'))require('./visual-test')({studio,engine,invoke,app,getState:()=>lastState});
   if(process.argv.includes('--studio-model-test'))require('./model-test')({studio,engine,invoke,app,getState:()=>lastState});
   if(process.argv.includes('--studio-output-test'))require('./output-test')({studio,engine,app,getState:()=>lastState});
+  if(process.argv.includes('--studio-format-import-test'))require('./model-import-test')({studio,engine,dialog,app,getState:()=>lastState});
+  if(process.argv.includes('--studio-import-error-test'))require('./import-error-test')({studio,dialog,app,getState:()=>lastState});
   if(process.argv.includes('--studio-self-test')) {
     const started=Date.now();
     const testTimer=setInterval(async()=>{

@@ -9783,7 +9783,7 @@ for (const name in blendshape_weight) {
 
 //両目
 // skip when using ARKit blendshapes
-if (!use_faceBlendshapes) {// || System._browser.camera.facemesh.auto_look_at_camera) {
+if (!use_faceBlendshapes && vrm.lookAt) {// Eye tracking is optional on VRM avatars.
   const eye_bone = bones_by_name['両目'];
   const lookAt = vrm.lookAt;
   if (System._browser.camera.facemesh.auto_look_at_camera) {

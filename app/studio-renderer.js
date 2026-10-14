@@ -1,4 +1,5 @@
 const $=id=>document.getElementById(id);
+let importBusy=false;
 let previewFrames=0,previewFpsStarted=performance.now();
 const pages={output:['视频输出','通过虚拟相机将人物画面发送到 OBS。'],overview:['总览','人物、输入与输出的状态，一眼看清。'],model:['人物与模型','导入人物和动作，管理当前出镜角色。'],pose:['动作与姿态','用有名称的按钮选择姿态和动画。'],settings:['场景与设置','调整背景、灯光、视觉效果与显示方式。'],camera:['视频输入','选择视频来源，采集保持手动控制。'],tracking:['动作捕捉','面部、手部、身体追踪的入口与设置。'],vmc:['VMC 连接','向兼容软件发送动作，或接收外部动作数据。']};
 let page='overview',state={ready:false},menuSignature='',captureAllowed=false,toastTimer,previewFrozen=false;
@@ -9,11 +10,17 @@ function filterActions(){if(page==='pose'&&document.getElementById('pose-library
 function markSelected(){document.querySelectorAll('#menu-options button').forEach(button=>{const selected=page==='pose'&&button.dataset.selected==='true';button.setAttribute('aria-pressed',String(selected));});}
 function log(message,error=false){const li=document.createElement('li');if(error)li.className='error';const time=document.createElement('time');time.textContent=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});const span=document.createElement('span');span.textContent=message;li.append(time,span);$('activity-log').prepend(li);while($('activity-log').children.length>5)$('activity-log').lastChild.remove();}
 function toast(message,error=false){$('toast').textContent=message;$('toast').className=error?'error':'';$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,4000);}
-async function command(name,payload={},label=''){try{const result=await window.studio.command(name,payload);if(result?.state)update(result.state);if(label&&!result?.cancelled){log(label);toast(label);}return result;}catch(e){const text=e.message.replace(/^Error invoking remote method '[^']+': Error: /,'');log(text,true);toast(text,true);return null;}}
+async function command(name,payload={},label=''){try{const result=await window.studio.command(name,payload);if(result?.ok===false)throw Error(result.error||'操作失败，请重试');if(result?.state)update(result.state);if(label&&!result?.cancelled){log(label);toast(label);}return result;}catch(e){const text=e.message.replace(/^Error invoking remote method '[^']+': Error: /,'');log(text,true);toast(text,true);return null;}}
 async function navigate(id){page=id;document.querySelectorAll('[data-page]').forEach(b=>b.setAttribute('aria-current',b.dataset.page===id?'page':'false'));$('page-title').textContent=pages[id][0];$('page-description').textContent=pages[id][1];$('control-title').textContent=id==='overview'?'开始创作':pages[id][0];$('quick-actions').hidden=id!=='overview';$('model-help').hidden=id!=='model';$('pose-search').hidden=id!=='pose';$('action-search').value='';$('search-empty').hidden=true;$('capture-card').hidden=!['camera','tracking'].includes(id)||captureAllowed;$('menu-options').replaceChildren();menuSignature='';$('control-description').textContent=id==='overview'?'选择一项操作，展开对应设置。':id==='model'?'使用人物预览下方的导入按钮，选择本地文件。':'正在读取设置…';if(state.ready)await command('section',{id});log('打开'+pages[id][0]);}
 function renderMenu(menu){
   if(typeof renderStudioOutput==='function')renderStudioOutput();
   if(page==='output')return;
+  if(page==='pose'&&state.staticModel){
+    menuSignature='';poseSignature='';$('menu-options').classList.remove('pose-menu');$('menu-options').replaceChildren();
+    $('control-title').textContent='展示模型';$('control-count').textContent='当前无法动捕';$('control-description').hidden=false;
+    $('control-description').textContent='这个模型尚未建立可用的人形骨骼映射，当前仅供展示。请使用带人形骨骼与蒙皮的模型，或切换内置人物。';
+    $('pose-search').hidden=true;$('reopen-menu').hidden=true;$('dismiss').hidden=true;$('engine-input').hidden=true;$('search-empty').hidden=true;return;
+  }
   if(page==='pose'&&state.poses?.length&&menu?.event==='_POSE_'&&menu.options.some(o=>o.key==='X'&&o.closing)){renderPoseLibrary(menu);return;}
   poseSignature='';$('menu-options').classList.remove('pose-menu');$('dismiss').textContent='关闭当前设置';$('control-description').hidden=false;
   if(page==='model'){renderModelPicker();return;}
@@ -40,12 +47,19 @@ function renderMenu(menu){
   if(advanced){advanced.open=!!advancedOpen;$('menu-options').append(advanced);}markSelected();filterActions();
   if(focusedId)$(focusedId)?.focus({preventScroll:true});
 }
-function update(next){$('legacy').textContent=next.legacyOpen?'关闭原版高级窗口':'打开原版高级窗口';$('legacy').setAttribute('aria-pressed',String(!!next.legacyOpen));const wasReady=state.ready;state=next;$('engine-status').textContent=state.error?'引擎连接异常':state.ready?'引擎已就绪':'引擎载入中';$('render-status').textContent=state.ready?'运行中':'正在载入';$('camera-status').textContent=state.camera?'已开启':'未开启';$('tracking-status').textContent=state.tracking?'追踪中':'未开启';$('avatar').disabled=!state.ready;$('import').disabled=!state.ready;$('pause').disabled=!state.camera;$('pause').textContent=state.paused?'恢复视频':'暂停视频';$('avatar').textContent=state.avatarVisible===false?'显示人物':'隐藏人物';$('model-name').textContent=state.model||'默认人物';$('motion-name').textContent=state.motion?'当前动作 · '+state.motion:state.ready?'待机姿态':'等待引擎初始化';$('footer-state').textContent=state.camera?'视频输入运行中'+(state.tracking?' · 追踪已开启':' · 追踪未开启'):'采集未开启 · 仅加载人物渲染';renderMenu(state.menu);if(state.ready&&!wasReady){log('人物引擎已就绪');if(!['overview','model'].includes(page))command('section',{id:page});}}
+function update(next){$('legacy').textContent=next.legacyOpen?'关闭原版高级窗口':'打开原版高级窗口';$('legacy').setAttribute('aria-pressed',String(!!next.legacyOpen));const wasReady=state.ready;state=next;$('engine-status').textContent=state.error?'引擎连接异常':state.ready?'引擎已就绪':'引擎载入中';$('render-status').textContent=state.ready?'运行中':'正在载入';$('camera-status').textContent=state.camera?'已开启':'未开启';$('tracking-status').textContent=state.tracking?'追踪中':'未开启';$('avatar').disabled=!state.ready;$('import').disabled=importBusy||!state.ready;$('pause').disabled=!state.camera;$('pause').textContent=state.paused?'恢复视频':'暂停视频';$('avatar').textContent=state.avatarVisible===false?'显示人物':'隐藏人物';$('model-name').textContent=state.model||'默认人物';$('motion-name').textContent=state.motion?'当前动作 · '+state.motion:state.ready?'待机姿态':'等待引擎初始化';$('footer-state').textContent=state.camera?'视频输入运行中'+(state.tracking?' · 追踪已开启':' · 追踪未开启'):'采集未开启 · 仅加载人物渲染';renderMenu(state.menu);if(state.ready&&!wasReady){log('人物引擎已就绪');if(!['overview','model'].includes(page))command('section',{id:page});}}
 document.querySelectorAll('[data-page]').forEach(button=>button.addEventListener('click',()=>navigate(button.dataset.page)));
 document.querySelectorAll('[data-go]').forEach(button=>button.addEventListener('click',()=>navigate(button.dataset.go)));
 $('avatar').addEventListener('click',()=>command('avatar',{},'已切换人物可见性'));
 $('pause').addEventListener('click',()=>command('pause',{},'已切换视频播放状态'));
-$('import').addEventListener('click',()=>command('import',{},'文件已提交给人物引擎'));
+window.studio.onImportProgress(text=>{$('import-status').hidden=false;$('import-status').textContent=text;});
+$('import').addEventListener('click',async()=>{
+ if(importBusy)return;importBusy=true;const button=$('import');button.disabled=true;button.textContent='正在导入…';$('import-status').hidden=false;$('import-status').textContent='请选择模型或动作文件…';
+ try{const result=await command('import');
+  if(result&&!result.cancelled){const label=result.importNote||(result.state?.staticModel?'已导入展示模型':'已导入人物或动作');const warning=result.missingTextures?.length?'；部分贴图缺失：'+result.missingTextures.join('、'):'';$('import-status').textContent=label+warning;log(label+warning);toast(label+warning);}
+  else if(result?.cancelled){$('import-status').hidden=true;}else{$('import-status').textContent='导入失败，请查看操作记录中的原因，再重新选择文件。';}
+ }finally{importBusy=false;button.disabled=!state.ready;button.textContent='导入模型 / 动作';}
+});
 $('legacy').addEventListener('click',async()=>{const button=$('legacy');button.disabled=true;try{const result=await command('legacy');if(result?.state){const label=result.state.legacyOpen?'已打开原版高级窗口':'已关闭原版高级窗口';log(label);toast(label);}}finally{button.disabled=false;}});
 $('dismiss').addEventListener('click',()=>{const closing=page==='pose'&&$('pose-library')?state.menu?.options.find(o=>o.closing):null;return closing?command('choose',{key:closing.key,sbIndex:closing.sbIndex||0},'已收起动作库'):command('dismiss',{},'已关闭当前设置');});
 $('reopen-menu').addEventListener('click',async()=>{const button=$('reopen-menu');button.disabled=true;try{await navigate(page);}finally{button.disabled=false;}});

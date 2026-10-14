@@ -1,5 +1,25 @@
 (() => {
   let captureAllowed=false;
+  let staticModel=null;
+  let importedName=null,importedPath=null;
+  function clearStaticModel(){
+    if(!staticModel)return;
+    MMD_SA.THREEX.scene.remove(staticModel.scene);
+    staticModel.scene.traverse(o=>{o.geometry?.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>{if(m){m.map?.dispose();m.dispose();}});});
+    staticModel=null;MMD_SA.hide_3D_avatar=false;
+  }
+  async function importStatic(file,displayName){
+    const loaded=await MMD_SA.THREEX.GLTF_loader.loadAsync(toFileProtocol(file));
+    const THREE=MMD_SA.THREEX.THREE,scene=loaded.scene;
+    const bounds=new THREE.Box3().setFromObject(scene),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
+    if(![size.x,size.y,size.z].every(Number.isFinite)||Math.max(size.x,size.y,size.z)<=0){scene.traverse(o=>o.geometry?.dispose());throw Error('静态模型没有可显示的网格');}
+    const scale=20/(size.y>1e-6?size.y:Math.max(size.x,size.y,size.z));scene.scale.multiplyScalar(scale);
+    scene.position.copy(MMD_SA._trackball_camera.target).sub(center.multiplyScalar(scale));
+    scene.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
+    clearStaticModel();MMD_SA.THREEX.scene.add(scene);MMD_SA.hide_3D_avatar=true;
+    staticModel={scene,name:displayName||String(file).split(/[\\/]/).pop()};
+    MMD_SA.reset_camera();
+  }
   let background={enabled:false,color:'#00ff00'},savedBackground=null;
   function applyBackground(){
     if(!background.enabled)return;
@@ -98,13 +118,14 @@
     const activePath=MMD_SA.THREEX?.models?.[0]?.model_path||MMD_SA_options.model_path;
     const model=clean(String(activePath||'').split(/[\\/]/).pop());
     const builtin={'AliciaSolid.vrm':['default','默认少女'],'Robert.vrm':['robert','罗伯特'],'Polybot.vrm':['polybot','小方机器人'],'RocketboxMale.vrm':['realman','写实男性']}[model];
-    return {ready:true,camera:!!(c.initialized&&(c.stream?c.stream.getVideoTracks().some(t=>t.readyState==='live'):c.video?.currentSrc)),tracking:!!c.ML_enabled,paused:!!c.video?.paused,avatarVisible:!MMD_SA.hide_3D_avatar,motion:filename,model:builtin?.[1]||(/DUMMY/i.test(model)?'默认人物':model),modelId:builtin?.[0]||'custom',captureAllowed,menu:visualMode?null:menu,poses:activeSection==='pose'?poseCatalog():null,visualEffects:visualMode?visualState():null,section:activeSection};
+    return {ready:true,camera:!!(c.initialized&&(c.stream?c.stream.getVideoTracks().some(t=>t.readyState==='live'):c.video?.currentSrc)),tracking:!!c.ML_enabled,paused:!!c.video?.paused,avatarVisible:staticModel?staticModel.scene.visible:!MMD_SA.hide_3D_avatar,motion:staticModel?'展示模式（当前无法动捕）':filename,model:staticModel?staticModel.name:(activePath===importedPath?importedName:null)||builtin?.[1]||(/DUMMY/i.test(model)?'默认人物':model),modelId:staticModel?'static':builtin?.[0]||'custom',staticModel:!!staticModel,captureAllowed,menu:visualMode?null:menu,poses:activeSection==='pose'&&!staticModel?poseCatalog():null,visualEffects:visualMode?visualState():null,section:activeSection};
   }
   function dismiss(){const d=MMD_SA_options.Dungeon;d.dialogue_branch_mode=null;d.run_event();MMD_SA.SpeechBubble?.list?.forEach(s=>s.hide?.());revision++;}
   async function choose(key,sbIndex=0){
     const d=MMD_SA_options.Dungeon;
     const b=d.dialogue_branch_mode?.find(b=>(b.sb_index||0)===sbIndex&&(Array.isArray(b.key)?b.key.includes(key):String(b.key)===String(key)));
     if(!b)throw Error('菜单已更新，请重新选择');
+    if(staticModel&&['pose','tracking'].includes(activeSection)&&!b.is_closing_event)throw Error('当前模型没有可用的人形骨骼映射，不能应用动作或动捕。请切换内置人物或导入带骨骼的 VRM / PMX。');
     if(activeSection==='settings'&&String(key)==='3'&&sbIndex===0&&b.event_id?.func?.toString().includes('GUI.obj.visual_effects')&&d._event_active?.id==='_FACEMESH_OPTIONS_'){
       visualMode=true;
       if(MMD_SA.THREEX.enabled&&!MMD_SA.THREEX.PPE.initialized)await MMD_SA.THREEX.PPE.init();
@@ -130,6 +151,7 @@
     if(command==='view-reset'){
       MMD_SA.reset_camera();
     }else if(command==='pose-select'){
+      if(staticModel)throw Error('当前模型没有可用的人形骨骼映射，无法应用动作');
       if(activeSection!=='pose')throw Error('请先打开动作与姿态');
       const entry=poseCatalog().find(p=>p.id===payload.id);if(!entry)throw Error('动作列表已更新，请重新选择');
       const busy=await MMD_SA_options.Dungeon_options.item_base.pose._change_motion_(entry.index,true);
@@ -146,6 +168,7 @@
       }
       revision++;
     }else if(command==='model-select'){
+      importedName=importedPath=null;clearStaticModel();
       if(!MMD_SA.THREEX.enabled)throw Error('当前渲染模式不支持内置人物切换');
       const path=payload.id==='default'?defaultAvatarPath:payload.file;
       if(!path)throw Error('人物文件尚未准备好');
@@ -170,10 +193,15 @@
     else if(command==='pause'){
       const v=System._browser.camera.video;if(!System._browser.camera.initialized)throw Error('没有正在运行的视频输入');
       if(v.paused)await v.play();else v.pause();
-    }else if(command==='avatar'){MMD_SA.hide_3D_avatar=!MMD_SA.hide_3D_avatar;System._browser.update_tray();}
+    }else if(command==='avatar'){if(staticModel)staticModel.scene.visible=!staticModel.scene.visible;else MMD_SA.hide_3D_avatar=!MMD_SA.hide_3D_avatar;System._browser.update_tray();}
     else if(command==='import'){
       if(typeof SA_DragDropEMU!=='function')throw Error('导入接口尚未就绪');
-      await SA_DragDropEMU(payload.file);
+      if(payload.kind==='static')await importStatic(payload.file,payload.displayName);
+      else if(/\.vrm$/i.test(payload.file)||/\.glb$/i.test(payload.file)){
+        clearStaticModel();MMD_SA_options.THREEX_options.model_path_extra ||= [];
+        await Promise.race([MMD_SA.THREEX.VRM.load_extra(payload.file),new Promise((_,reject)=>setTimeout(()=>reject(Error('人物加载超时，请检查模型格式')),30000))]);
+        MMD_SA.hide_3D_avatar=false;importedPath=payload.file;importedName=payload.displayName||null;
+      }else {clearStaticModel();await SA_DragDropEMU(payload.file);}
     }else if(command==='engine-key'){
       const branch=MMD_SA_options.Dungeon.dialogue_branch_mode?.find(b=>!b.sb_index&&b.key==='any');
       if(!branch)throw Error('当前设置不接受输入');

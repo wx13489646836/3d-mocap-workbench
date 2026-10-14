@@ -1,4 +1,5 @@
 # Chromium session databases, credentials, locks and disposable caches.
+/imports/
 /user-data/*
 !/user-data/studio-settings.json
 **/__pycache__/
