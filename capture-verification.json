@@ -1,0 +1,73 @@
+{
+  "ok": true,
+  "checks": [
+    "启动时未自动采集",
+    "检测到真实摄像头",
+    "显示专用采集面板并隐藏旧菜单",
+    "真实视频已解码",
+    "输入取景预览收到画面",
+    "动捕页显示启动按钮并折叠输入设置",
+    "全身动捕收到 MediaPipe 识别结果",
+    "停止动捕保留视频输入",
+    "关闭输入释放所有设备轨道",
+    "停止后可重新打开摄像头并镜像",
+    "权限拒绝返回可读错误",
+    "设备占用返回可读错误",
+    "错误后可恢复打开设备",
+    "取消视频选择不启动输入",
+    "本地视频输入可解码",
+    "切换其他功能恢复原控制面板",
+    "采集面板布局 1380",
+    "采集面板布局 1040",
+    "采集面板布局 768",
+    "采集面板布局 375",
+    "采集生命周期无脚本运行错误"
+  ],
+  "devices": [
+    {
+      "label": "HP True Vision FHD Camera"
+    },
+    {
+      "label": "Avatar Camera"
+    }
+  ],
+  "camera": {
+    "label": "HP True Vision FHD Camera",
+    "width": 640,
+    "height": 480,
+    "fps": 30
+  },
+  "tracking": {
+    "mode": "Full Body",
+    "poseUpdates": 4,
+    "faceUpdates": 33,
+    "detected": true
+  },
+  "layouts": [
+    {
+      "width": 1380,
+      "overflow": false,
+      "oldMenuVisible": false,
+      "panelWidth": 325.66668701171875
+    },
+    {
+      "width": 1040,
+      "overflow": false,
+      "oldMenuVisible": false,
+      "panelWidth": 265.66668701171875
+    },
+    {
+      "width": 768,
+      "overflow": false,
+      "oldMenuVisible": false,
+      "panelWidth": 523.6666870117188
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "oldMenuVisible": false,
+      "panelWidth": 319
+    }
+  ],
+  "runtimeErrors": []
+}

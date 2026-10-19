@@ -48,7 +48,7 @@ module.exports = ({electron, app, engine}) => {
     legacyMode=open;engine.setAlwaysOnTop(false);engine.setOpacity(open?1:0);engine.setIgnoreMouseEvents(!open);
     if(open)engine.show();else{engine.showInactive();studio.focus();}
   };
-  const actions = new Set(['state','section','choose','dismiss','pause','avatar','capture-access','import','legacy','engine-key','preview-pause','visual-set','visual-close','capture-stop','model-select','background-set','output-start','output-stop','pose-select','view-reset']);
+  const actions = new Set(['state','section','choose','dismiss','pause','avatar','capture-access','import','legacy','engine-key','preview-pause','visual-set','visual-close','capture-stop','model-select','background-set','output-start','output-stop','pose-select','view-reset','camera-list','camera-start','camera-file','tracking-start']);
   ipcMain.on('studio:viewport-input',(event,input)=>{
     if(event.sender!==studio.webContents||!lastState.ready||engine.isDestroyed()||legacyMode)return;
     if(!['mouseDown','mouseMove','mouseUp','mouseWheel'].includes(input?.type)||!Number.isFinite(input.u)||!Number.isFinite(input.v))return;
@@ -84,6 +84,14 @@ module.exports = ({electron, app, engine}) => {
     }
     if(command==='preview-pause'){previewPaused=payload.paused===true;return {ok:true};}
     if(command==='capture-access'){captureAllowed=payload.enabled===true;return {ok:true,captureAllowed};}
+    if(['camera-start','camera-file','tracking-start'].includes(command))captureAllowed=true;
+    if(command==='camera-file'){
+      const selected=await dialog.showOpenDialog(studio,{title:'选择动捕视频',properties:['openFile'],filters:[{name:'视频文件',extensions:['mp4','webm','mov','m4v']}]});
+      if(selected.canceled)return {ok:true,cancelled:true};
+      return await invoke('camera-start',{file:require('url').pathToFileURL(selected.filePaths[0]).href});
+    }
+    // Renderer callers can select devices, never inject file URLs into the engine.
+    if(command==='camera-start'||command==='tracking-start')return await invoke(command,{deviceId:typeof payload.deviceId==='string'?payload.deviceId:'',resolution:payload.resolution,mirror:payload.mirror===true,mode:payload.mode});
     if(command==='legacy'){setLegacy(!legacyMode);return {ok:true,state:await invoke('state')};}
     if(command==='section'&&legacyMode)setLegacy(false);
     if(command==='import') {
@@ -100,7 +108,7 @@ module.exports = ({electron, app, engine}) => {
       const loaded=await invoke('import',{file:checked.file,kind:checked.kind,displayName:checked.displayName});
       return {...loaded,importNote:checked.note,missingTextures:checked.missingTextures||[]};
     }
-    return invoke(command,payload);
+    return await invoke(command,payload);
     }catch(error){
       try{fs.appendFileSync(path.join(__dirname,'../user-data/main-errors.log'),new Date().toISOString()+' '+command+' '+(error.stack||error)+'\n');}catch{}
       return {ok:false,error:error.message||'操作失败，请重试'};
@@ -111,15 +119,16 @@ module.exports = ({electron, app, engine}) => {
     inFlight=true;
     try {
       lastState=await invoke('state');
+      if(studio.isDestroyed()||engine.isDestroyed())return;
       if(lastState.ready&&!backgroundApplied){await invoke('background-set',background);backgroundApplied=true;}
       if(!lastState.ready && !lastState.diagnostics?.bootClicked)await invoke('boot');
-      studio.webContents.send('studio:state',lastState);
-    } catch(error){studio.webContents.send('studio:state',{...lastState,error:error.message});}
+      if(!studio.isDestroyed())studio.webContents.send('studio:state',lastState);
+    } catch(error){if(!studio.isDestroyed())studio.webContents.send('studio:state',{...lastState,error:error.message});}
     finally {inFlight=false;}
   },250);
   ipcMain.on('studio:frame-ready',(event,id)=>{if(event.sender===studio.webContents&&id===awaitingFrame){awaitingFrame=0;metrics.acks++;}});
   const frameTimer=setInterval(async()=>{
-    if(frameInFlight)return;
+    if(frameInFlight||studio.isDestroyed()||engine.isDestroyed())return;
     if(lastState.ready&&!baselineMode&&!subscriptionActive&&!engine.isDestroyed()){
       subscriptionActive=true;
       engine.webContents.beginFrameSubscription(false,frame=>{
@@ -137,7 +146,7 @@ module.exports = ({electron, app, engine}) => {
       const frame=await engine.webContents.capturePage(undefined,{stayHidden:true,stayAwake:true});
       videoOutput.send(frame);
       if(canSend())sendFrame(frame,performance.now()-start);
-    }catch(error){studio.webContents.send('studio:state',{...lastState,error:error.message});}
+    }catch(error){if(!studio.isDestroyed())studio.webContents.send('studio:state',{...lastState,error:error.message});}
     finally{frameInFlight=false;}
   },8);
   engine.webContents.on('console-message',(_e,_level,message)=>{
@@ -168,6 +177,7 @@ module.exports = ({electron, app, engine}) => {
       fs.writeFileSync(path.join(__dirname,'../studio-preview.png'),(await studio.webContents.capturePage()).toPNG());
     }catch(error){fs.writeFileSync(path.join(__dirname,'../performance-result.json'),JSON.stringify({ok:false,error:error.stack}));}finally{app.quit();}})();
   }
+  if(process.argv.includes('--studio-capture-test'))require('./capture-test')({studio,engine,invoke,dialog,app,getState:()=>lastState});
   if(process.argv.includes('--studio-layout-test'))require('./layout-audit')({studio,invoke,app,getState:()=>lastState});
   if(process.argv.includes('--studio-menu-test'))require('./menu-reopen-test')({studio,invoke,app,getState:()=>lastState});
   if(process.argv.includes('--studio-visual-test'))require('./visual-test')({studio,engine,invoke,app,getState:()=>lastState});

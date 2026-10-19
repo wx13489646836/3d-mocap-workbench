@@ -1,7 +1,7 @@
 const $=id=>document.getElementById(id);
 let importBusy=false;
 let previewFrames=0,previewFpsStarted=performance.now();
-const pages={output:['视频输出','通过虚拟相机将人物画面发送到 OBS。'],overview:['总览','人物、输入与输出的状态，一眼看清。'],model:['人物与模型','导入人物和动作，管理当前出镜角色。'],pose:['动作与姿态','用有名称的按钮选择姿态和动画。'],settings:['场景与设置','调整背景、灯光、视觉效果与显示方式。'],camera:['视频输入','选择视频来源，采集保持手动控制。'],tracking:['动作捕捉','面部、手部、身体追踪的入口与设置。'],vmc:['VMC 连接','向兼容软件发送动作，或接收外部动作数据。']};
+const pages={output:['视频输出','通过虚拟相机将人物画面发送到 OBS。'],overview:['总览','人物、输入与输出的状态，一眼看清。'],model:['人物与模型','导入人物和动作，管理当前出镜角色。'],pose:['动作与姿态','用有名称的按钮选择姿态和动画。'],settings:['场景与设置','调整背景、灯光、视觉效果与显示方式。'],camera:['视频输入','选择摄像头，确认画面后开启动作捕捉。'],tracking:['动作捕捉','选择追踪模式，让人物跟随你的动作。'],vmc:['VMC 连接','向兼容软件发送动作，或接收外部动作数据。']};
 let page='overview',state={ready:false},menuSignature='',captureAllowed=false,toastTimer,previewFrozen=false;
 const translations={'Stand relaxed':'放松站姿','Stand simple':'标准站姿','Standby':'待机动作','Happy idle':'轻松待机','I-shaped balance':'单腿平衡','Sit 01':'坐姿一','Sit 02':'坐姿二','Sit 03':'坐姿三','介面及重叠覆盖':'界面与叠加显示','将动作汇出成档案':'导出动作文件','关於 XR Animator':'关于软件'};
 function friendly(text){for(const [from,to] of Object.entries(translations))text=text.replaceAll(from,to);return text.replace(/\(💃➔全身动捕\)/g,'（全身）').replace(/\(🙋➔上半身动捕\)/g,'（上半身）').replace(/\(🙋\/🦶\)/g,'（上半身 / 足部）').replace(/\(🦶\/🙋\)/g,'（足部 / 上半身）').replace(/\(🙋\)/g,'（上半身）').replace(/[\p{Extended_Pictographic}\uFE0F]/gu,'').replace(/^[┣┗]\s*/,'').trim();}
@@ -11,10 +11,11 @@ function markSelected(){document.querySelectorAll('#menu-options button').forEac
 function log(message,error=false){const li=document.createElement('li');if(error)li.className='error';const time=document.createElement('time');time.textContent=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});const span=document.createElement('span');span.textContent=message;li.append(time,span);$('activity-log').prepend(li);while($('activity-log').children.length>5)$('activity-log').lastChild.remove();}
 function toast(message,error=false){$('toast').textContent=message;$('toast').className=error?'error':'';$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,4000);}
 async function command(name,payload={},label=''){try{const result=await window.studio.command(name,payload);if(result?.ok===false)throw Error(result.error||'操作失败，请重试');if(result?.state)update(result.state);if(label&&!result?.cancelled){log(label);toast(label);}return result;}catch(e){const text=e.message.replace(/^Error invoking remote method '[^']+': Error: /,'');log(text,true);toast(text,true);return null;}}
-async function navigate(id){page=id;document.querySelectorAll('[data-page]').forEach(b=>b.setAttribute('aria-current',b.dataset.page===id?'page':'false'));$('page-title').textContent=pages[id][0];$('page-description').textContent=pages[id][1];$('control-title').textContent=id==='overview'?'开始创作':pages[id][0];$('quick-actions').hidden=id!=='overview';$('model-help').hidden=id!=='model';$('pose-search').hidden=id!=='pose';$('action-search').value='';$('search-empty').hidden=true;$('capture-card').hidden=!['camera','tracking'].includes(id)||captureAllowed;$('menu-options').replaceChildren();menuSignature='';$('control-description').textContent=id==='overview'?'选择一项操作，展开对应设置。':id==='model'?'使用人物预览下方的导入按钮，选择本地文件。':'正在读取设置…';if(state.ready)await command('section',{id});log('打开'+pages[id][0]);}
+async function navigate(id){page=id;document.querySelectorAll('[data-page]').forEach(b=>b.setAttribute('aria-current',b.dataset.page===id?'page':'false'));$('page-title').textContent=pages[id][0];$('page-description').textContent=pages[id][1];$('control-title').textContent=id==='overview'?'开始创作':pages[id][0];$('quick-actions').hidden=id!=='overview';$('model-help').hidden=id!=='model';$('pose-search').hidden=id!=='pose';$('action-search').value='';$('search-empty').hidden=true;$('capture-card').hidden=true;$('menu-options').replaceChildren();menuSignature='';$('control-description').textContent=id==='overview'?'选择一项操作，展开对应设置。':id==='model'?'使用人物预览下方的导入按钮，选择本地文件。':'正在读取设置…';if(state.ready)await command('section',{id});log('打开'+pages[id][0]);}
 function renderMenu(menu){
   if(typeof renderStudioOutput==='function')renderStudioOutput();
-  if(page==='output')return;
+  renderCapturePanel();
+  if(['output','camera','tracking'].includes(page))return;
   if(page==='pose'&&state.staticModel){
     menuSignature='';poseSignature='';$('menu-options').classList.remove('pose-menu');$('menu-options').replaceChildren();
     $('control-title').textContent='展示模型';$('control-count').textContent='当前无法动捕';$('control-description').hidden=false;
@@ -82,6 +83,6 @@ window.studio.onState(next=>{update(next);$('freeze').disabled=!state.ready;$('p
 $('action-search').addEventListener('input',filterActions);
 $('freeze').addEventListener('click',()=>{previewFrozen=!previewFrozen;command('preview-pause',{paused:previewFrozen});previewFrames=0;previewFpsStarted=performance.now();$('freeze').setAttribute('aria-pressed',String(previewFrozen));$('freeze').textContent=previewFrozen?'恢复预览':'暂停预览';$('preview-status').textContent=previewFrozen?'预览已暂停':'实时预览';});
 $('zoom-reset').addEventListener('click',()=>{$('zoom').value='100';$('zoom-value').textContent='100%';$('preview').style.transform='scale(1)';});
-log('工作台已启动，采集操作保持暂停');
+log('工作台已启动，点击开启摄像头后开始采集');
 
 

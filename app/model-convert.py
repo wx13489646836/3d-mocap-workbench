@@ -77,10 +77,51 @@ def run():
    matches=list(source.parent.rglob(original.name));candidate=matches[0] if matches else original
   if candidate.is_file():image.filepath=str(candidate);image.reload();image.pack()
   else:missingTextures.append(original.name)
+ materialCorrections=[]
+ if ext=='.fbx':
+  # Tripo's legacy Phong export inherits a ReflectionFactor template of 1.
+  # Blender maps it to PBR metallic=1 even though this material explicitly
+  # declares Reflectivity=0. Do not override authored PBR/metallic materials.
+  from io_scene_fbx import parse_fbx
+  fbx_root,_=parse_fbx.parse(str(source));nonmetal=set()
+  for objects in fbx_root.elems:
+   if objects.id!=b'Objects':continue
+   for item in objects.elems:
+    if item.id!=b'Material':continue
+    name=item.props[1].split(b'\x00')[0].decode('utf-8','replace')
+    if not name.startswith('tripo_mat_'):continue
+    shader=next((c.props[0] for c in item.elems if c.id==b'ShadingModel'),b'')
+    props={p.props[0]:p.props[4:] for c in item.elems if c.id==b'Properties70' for p in c.elems if p.id==b'P'}
+    if shader.lower()==b'phong' and props.get(b'Reflectivity')==[0.0] and b'ReflectionFactor' not in props and not any(b'metal' in k.lower() for k in props):nonmetal.add(name)
+  opaque_images={}
+  for material in bpy.data.materials:
+   if not material.use_nodes:continue
+   for node in material.node_tree.nodes:
+    if node.type!='BSDF_PRINCIPLED':continue
+    if material.name in nonmetal and not node.inputs['Metallic'].is_linked:
+     node.inputs['Metallic'].default_value=0
+     # Legacy Phong's missing refraction index is imported as IOR=1 and
+     # doubled specular. Use the standard dielectric baseline for PBR.
+     if not node.inputs['IOR'].is_linked:node.inputs['IOR'].default_value=1.5
+     if not node.inputs['Specular IOR Level'].is_linked:node.inputs['Specular IOR Level'].default_value=.5
+     materialCorrections.append({'material':material.name,'correction':'legacy_phong_nonmetal'})
+    alpha=node.inputs['Alpha']
+    # A 32-bit diffuse PNG does not imply translucency. Preserve genuine
+    # alpha textures and node networks; remove only proven constant opacity.
+    if len(alpha.links)!=1:continue
+    link=alpha.links[0];image=link.from_node.image if link.from_node.type=='TEX_IMAGE' and link.from_socket.name=='Alpha' else None
+    if image is None or not image.has_data:continue
+    key=image.as_pointer()
+    if key not in opaque_images:
+     pixels=np.empty(len(image.pixels),dtype=np.float32);image.pixels.foreach_get(pixels)
+     opaque_images[key]=bool(len(pixels) and np.all(pixels[3::4]>=1-1e-6));del pixels
+    if opaque_images[key]:
+     material.node_tree.links.remove(link);alpha.default_value=1
+     materialCorrections.append({'material':material.name,'correction':'fully_opaque_texture'})
  bpy.ops.object.select_all(action='DESELECT')
  for o in meshes+arms:o.select_set(True)
  target=out/'model.glb';bpy.ops.export_scene.gltf(filepath=str(target),export_format='GLB',use_selection=True,export_animations=False,export_skins=True,export_morph=True,export_morph_normal=True,export_yup=True)
- result={'file':str(target),'kind':'static','note':'没有可识别的人形骨骼，仅供模型展示','missingTextures':missingTextures}
+ result={'file':str(target),'kind':'static','note':'没有可识别的人形骨骼，仅供模型展示','missingTextures':missingTextures,'materialCorrections':materialCorrections}
  if humanoid:
   raw=target.read_bytes();length=struct.unpack_from('<I',raw,12)[0];doc=json.loads(raw[20:20+length]);binary=raw[28+length:];names={n.get('name'):i for i,n in enumerate(doc['nodes'])};human={r:{'node':names[b]} for r,b in mapping.items() if b in names}
   expr={}

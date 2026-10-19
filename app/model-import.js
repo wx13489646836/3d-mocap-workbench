@@ -4,6 +4,8 @@ const JSZip=require('../engine/AT_SystemAnimator_v110350.gadget/js/jszip.js');
 const native=/\.(vrm|pmx|pmd|vmd|bvh)$/i;
 const supported=/\.(vrm|pmx|pmd|vmd|bvh|fbx|obj|glb|gltf|stl|ply|blend)$/i;
 function blenderPath(){
+ const localCandidates=[process.env.BLENDER_PATH,'D:/Blender/blender.exe'].filter(Boolean);
+ for(const exe of localCandidates){if(fs.existsSync(exe)&&fs.statSync(exe).isFile())return exe;}
  const roots=[path.join(process.env.ProgramFiles||'C:/Program Files','Blender Foundation'),path.join(process.env.LOCALAPPDATA||'','Programs','Blender Foundation')];
  for(const root of roots){if(!fs.existsSync(root))continue;for(const folder of fs.readdirSync(root).filter(n=>{const v=n.match(/(\d+)\.(\d+)/);return v&&(Number(v[1])>4||Number(v[1])===4&&Number(v[2])>=2);}).sort((a,b)=>{const av=a.match(/(\d+)\.(\d+)/),bv=b.match(/(\d+)\.(\d+)/);return Number(bv[1])-Number(av[1])||Number(bv[2])-Number(av[2]);})){const exe=path.join(root,folder,'blender.exe');if(fs.existsSync(exe))return exe;}}
  throw Error('导入此格式需要 Blender 4.2 或更新版。请安装 Blender 后重试；VRM、PMX、PMD 和动作文件仍可直接导入。');

@@ -21,3 +21,7 @@ desktop.ini
 /engine-loading.png
 /test-progress.json
 /.backup-manifest.json
+
+# Locally installed runtimes are distributed separately from source.
+/runtime/electron/
+/runtime/python311/

@@ -5,7 +5,7 @@ module.exports=()=>{
   let child=null,lastFrameAt=0,starting=null;
   let status={running:false,starting:false,device:'Avatar Camera',width:1280,height:720,fps:0,error:''};
   const runtime=path.join(__dirname,'../runtime/virtual-camera');
-  const python=path.join(process.env.LOCALAPPDATA,'Programs/Python/Python311/python.exe');
+  const python=path.join(__dirname,'../runtime/python311/python.exe');
   const stop=()=>{const process=child;child=null;status={...status,running:false,starting:false,fps:0};if(process){process.stdin.end();const timer=setTimeout(()=>process.kill(),800);process.once('exit',()=>clearTimeout(timer));}};
   const start=async(resolution)=>{
     if(starting)return starting;
