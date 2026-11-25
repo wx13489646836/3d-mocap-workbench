@@ -3,7 +3,8 @@
   // Studio owns device selection. The legacy picker exposes numeric devices only
   // through its keyboard catch-all branch, so it cannot be rendered as buttons.
   let captureBusy=false,captureError='',captureSource='',captureDevices=[],captureMode='Full Body';
-  let capturePreview='',capturePreviewAt=0,poseUpdates=0,faceUpdates=0;
+  let previewCanvas,previewTime=-1,inputId=0,poseUpdates=0,faceUpdates=0;
+  let trackingFps=0,trackingSampleTime=0,trackingSampleCount=0;
   window.addEventListener('SA_camera_poseNet_update',()=>poseUpdates++);
   window.addEventListener('SA_camera_facemesh_update',()=>faceUpdates++);
   const captureModes=['Face','Body','Body+Hands','Face+Body','Full Body','Full Body Holistic'];
@@ -11,12 +12,13 @@
   function stopTracking(){
     const c=System._browser.camera;
     c.facemesh.enabled=false;c.poseNet.enabled=false;c.handpose.enabled=false;
+    trackingFps=trackingSampleTime=0;
   }
   function releaseInput(){
     const c=System._browser.camera;
     stopTracking();c.hide();c.video?.pause();c.stream?.getTracks().forEach(t=>t.stop());
     if(c.video){c.video.srcObject=null;c.video.removeAttribute('src');c.video.load();}
-    c.stream=c.video_track=c.deviceId=null;captureSource='';capturePreview='';
+    c.stream=c.video_track=c.deviceId=null;captureSource='';inputId++;previewTime=-1;
   }
   function cameraError(error){
     const messages={NotAllowedError:'摄像头权限被拒绝。请在 Windows 设置 → 隐私和安全性 → 摄像头中允许桌面应用访问。',NotFoundError:'未检测到摄像头，请连接设备后刷新列表。',NotReadableError:'摄像头无法读取，可能正被其他软件占用。请关闭占用程序后重试。',OverconstrainedError:'摄像头不支持当前采集参数，请改用自动分辨率。',SecurityError:'当前环境禁止访问摄像头，请检查系统权限。'};
@@ -45,12 +47,11 @@
       await waitForVideo(c.video);captureSource='file';
       return;
     }
-    const sizes={auto:null,'480p':[640,480],'720p':[1280,720],'1080p':[1920,1080]};
+    const sizes={auto:[640,480],'480p':[640,480],'720p':[1280,720],'1080p':[1920,1080]};
     if(!Object.hasOwn(sizes,payload.resolution||'auto'))throw Error('无效的采集分辨率');
-    const video={frameRate:{ideal:30}};
+    const [width,height]=sizes[payload.resolution||'auto'];
+    const video={frameRate:{ideal:30},width:{ideal:width},height:{ideal:height}};
     if(payload.deviceId)video.deviceId={exact:payload.deviceId};
-    const size=sizes[payload.resolution||'auto'];
-    if(size){video.width={ideal:size[0]};video.height={ideal:size[1]};}
     releaseInput();
     let expired=false,timer;
     const pending=navigator.mediaDevices.getUserMedia({video,audio:false}).then(stream=>{
@@ -65,26 +66,53 @@
       c._update_camera_reset();c.set_constraints();c.video_flipped=payload.mirror===true;c.init_stream(stream);
       c.deviceId=stream.getVideoTracks()[0].getSettings().deviceId||payload.deviceId||null;
       await waitForVideo(c.video);
-      // init_stream alone does not initialize the legacy inference canvas size.
-      // Match the decoded source so capture frames have non-zero dimensions.
-      c.target_width=c.video.videoWidth;c.target_height=c.video.videoHeight;c.reset_video_canvas();captureSource='camera';
+      // Keep HD capture available without feeding full-size camera frames to the trackers.
+      const {videoWidth,videoHeight}=c.video;
+      const scale=Math.min(1,640/Math.max(videoWidth,videoHeight),480/Math.min(videoWidth,videoHeight));
+      c.target_width=Math.max(1,Math.round(videoWidth*scale));
+      c.target_height=Math.max(1,Math.round(videoHeight*scale));
+      c.reset_video_canvas();captureSource='camera';
       stream.getVideoTracks()[0].addEventListener('ended',()=>{
-        if(c.stream===stream){stopTracking();captureSource='';capturePreview='';captureError='摄像头已断开，请重新连接设备后刷新列表。';}
+        if(c.stream===stream){stopTracking();captureSource='';inputId++;previewTime=-1;captureError='摄像头已断开，请重新连接设备后刷新列表。';}
       });
       await listCameras();
     }catch(error){stream.getTracks().forEach(t=>t.stop());throw error;}
   }
+  const previewSection=()=>['camera','tracking'].includes(activeSection);
+  async function takeCapturePreview(){
+    const v=System._browser.camera.video;
+    if(!previewSection()||!(cameraLive()||captureSource==='file')||!v||v.readyState<2||!v.videoWidth||v.currentTime===previewTime)return null;
+    const id=inputId;
+    previewTime=v.currentTime;
+    previewCanvas ||= document.createElement('canvas');
+    const width=Math.min(320,v.videoWidth),height=Math.max(1,Math.round(width*v.videoHeight/v.videoWidth));
+    if(previewCanvas.width!==width)previewCanvas.width=width;
+    if(previewCanvas.height!==height)previewCanvas.height=height;
+    previewCanvas.getContext('2d').drawImage(v,0,0,width,height);
+    const blob=await new Promise(resolve=>previewCanvas.toBlob(resolve,'image/jpeg',.65));
+    if(!blob||id!==inputId||!previewSection())return null;
+    const src=await new Promise((resolve,reject)=>{
+      const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(reader.error);
+      reader.readAsDataURL(blob);
+    });
+    return id===inputId&&previewSection()?{id,src}:null;
+  }
   function captureState(){
     const c=System._browser.camera,v=c.video,live=cameraLive()||captureSource==='file'&&!!v?.currentSrc;
     if(!live&&c.ML_enabled&&!captureBusy)stopTracking();
-    if(live&&v?.readyState>=2&&['camera','tracking'].includes(activeSection)&&Date.now()-capturePreviewAt>500){
-      capturePreviewAt=Date.now();
-      try{const canvas=document.createElement('canvas');canvas.width=320;canvas.height=Math.round(320*v.videoHeight/v.videoWidth);canvas.getContext('2d').drawImage(v,0,0,canvas.width,canvas.height);capturePreview=canvas.toDataURL('image/jpeg',.65);}catch{capturePreview='';}
+    if(c.ML_enabled){
+      const now=performance.now(),count=captureMode==='Face'?faceUpdates:poseUpdates;
+      if(!trackingSampleTime||now-trackingSampleTime>=1000){
+        trackingFps=trackingSampleTime?Math.round((count-trackingSampleCount)*1000/(now-trackingSampleTime)):0;
+        trackingSampleTime=now;trackingSampleCount=count;
+      }
+    }else{
+      trackingFps=trackingSampleTime=0;
     }
     const settings=c.video_track?.getSettings()||{};
     return {busy:captureBusy,error:captureError,devices:captureDevices,deviceId:c.deviceId||'',label:c.video_track?.label||'',source:captureSource,
-      width:live?v?.videoWidth||0:0,height:live?v?.videoHeight||0:0,fps:settings.frameRate||0,preview:live?capturePreview:'',mirror:!!c.video_flipped,mode:captureMode,
-      detected:!!(c.poseNet.data_detected||c.facemesh.data_detected),trackingFps:c.ML_enabled?Math.round(c.ML_fps||0):0,poseUpdates,faceUpdates};
+      width:live?v?.videoWidth||0:0,height:live?v?.videoHeight||0:0,fps:settings.frameRate||0,inputId,previewActive:live&&previewSection()&&!v.paused,mirror:!!c.video_flipped,mode:captureMode,
+      detected:!!(c.poseNet.data_detected||c.facemesh.data_detected),trackingFps,poseUpdates,faceUpdates};
   }
   async function captureCommand(command,payload){
     if(command==='camera-list'){await listCameras();return;}
@@ -105,7 +133,7 @@
         if(c.bodyPix.enabled)throw Error('请先关闭人像分割，再开启动作捕捉。');
         if(c.video?.paused)await c.video.play();
         const initial=payload.mode==='Face'?faceUpdates:poseUpdates;
-        await c.streamer_mode.init_mocap(payload.mode);captureMode=payload.mode;
+        await c.streamer_mode.init_mocap(payload.mode);captureMode=payload.mode;trackingFps=trackingSampleTime=0;
         const started=Date.now();
         while((payload.mode==='Face'?faceUpdates:poseUpdates)<=initial){
           if(!cameraLive()&&captureSource!=='file')throw Error('视频输入已断开，请重新连接摄像头。');
@@ -298,7 +326,7 @@
     if(b.event_id!=null||b.branch_index!=null||b.event_index!=null)d.run_event(b.event_id,b.branch_index,b.event_index||0);else d.run_event();
     revision++;
   }
-  window.XRStudio={dispatch:async(command,payload={})=>{
+  window.XRStudio={takeCapturePreview,dispatch:async(command,payload={})=>{
     if(command==='state')return state(payload.legacyMode);
     if(command==='boot'){
       const start=document.getElementById('LMMD_StartButton');

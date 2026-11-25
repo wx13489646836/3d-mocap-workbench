@@ -5,5 +5,6 @@ contextBridge.exposeInMainWorld('studio',{
   onImportProgress:callback=>ipcRenderer.on('studio:import-progress',(_event,text)=>callback(text)),
   onState:callback=>ipcRenderer.on('studio:state',(_event,state)=>callback(state)),
   onFrame:callback=>ipcRenderer.on('studio:frame',(_event,frame)=>callback(frame)),
+  onCapturePreview:callback=>ipcRenderer.on('studio:capture-preview',(_event,frame)=>callback(frame)),
   frameReady:id=>ipcRenderer.send('studio:frame-ready',id)
 });

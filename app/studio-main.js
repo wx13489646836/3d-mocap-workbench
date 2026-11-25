@@ -23,7 +23,7 @@ module.exports = ({electron, app, engine}) => {
   studio.removeMenu();
   studio.loadFile(path.join(__dirname,'studio.html'));
   studio.on('ready-to-show',()=>studio.show());
-  studio.on('closed',()=>{videoOutput.stop();lanOutput.stop();clearInterval(timer);clearInterval(frameTimer);app.quit();});
+  studio.on('closed',()=>{videoOutput.stop();lanOutput.stop();clearInterval(timer);clearInterval(frameTimer);clearInterval(capturePreviewTimer);app.quit();});
   app.on('before-quit',()=>{videoOutput.stop();lanOutput.stop();});
   engine.webContents.setBackgroundThrottling(false);
   let inFlight=false,frameInFlight=false,lastState={ready:false},captureAllowed=false,legacyMode=false,previewPaused=false,awaitingFrame=0,frameId=0,frameSentAt=0;
@@ -144,6 +144,17 @@ module.exports = ({electron, app, engine}) => {
     } catch(error){if(!studio.isDestroyed())studio.webContents.send('studio:state',{...lastState,error:error.message});}
     finally {inFlight=false;}
   },250);
+  let capturePreviewPending=false;
+  const capturePreviewTimer=setInterval(async()=>{
+    if(capturePreviewPending||!lastState.capture?.previewActive||studio.isDestroyed()||studio.isMinimized()||engine.isDestroyed())return;
+    capturePreviewPending=true;
+    try{
+      const frame=await engine.webContents.executeJavaScript('window.XRStudio?.takeCapturePreview()');
+      if(frame&&!studio.isDestroyed())studio.webContents.send('studio:capture-preview',frame);
+    }catch{
+      // Preview failures must not interrupt capture or tracking.
+    }finally{capturePreviewPending=false;}
+  },1000/12);
   ipcMain.on('studio:frame-ready',(event,id)=>{if(event.sender===studio.webContents&&id===awaitingFrame){awaitingFrame=0;metrics.acks++;}});
   const frameTimer=setInterval(async()=>{
     if(frameInFlight||studio.isDestroyed()||engine.isDestroyed())return;

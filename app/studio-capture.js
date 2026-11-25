@@ -1,5 +1,6 @@
 // Dedicated, device-based capture controls; menu navigation never opens hardware.
 let capturePending=false,captureDeviceSignature='',captureUiError='',capturePanelPage='';
+let previewInputId;
 function captureOptions(){return {deviceId:$('camera-device').value,resolution:$('camera-resolution').value,mirror:$('camera-mirror').checked,mode:$('tracking-mode').value};}
 function renderCapturePanel(){
   const visible=['camera','tracking'].includes(page),info=state.capture||{},busy=capturePending||info.busy;
@@ -31,12 +32,13 @@ function renderCapturePanel(){
   $('tracking-start').disabled=!state.ready||busy||!!state.staticModel||(!state.camera&&!devices.length);
   $('tracking-start').textContent=busy?'正在准备…':state.tracking?'应用追踪模式':state.camera?'开始动作捕捉':'开启摄像头并开始动捕';
   $('tracking-stop').disabled=busy||!state.tracking;$('camera-stop').disabled=busy||!state.camera;
-  $('capture-preview').hidden=!info.preview;$('capture-empty').hidden=!!info.preview;$('capture-live').hidden=!info.preview;
-  if(visible&&info.preview&&$('capture-preview').src!==info.preview)$('capture-preview').src=info.preview;
-  if(!info.preview)$('capture-preview').removeAttribute('src');
+  if(!state.camera||previewInputId!==info.inputId){
+    $('capture-preview').removeAttribute('src');
+    $('capture-preview').hidden=true;$('capture-empty').hidden=false;$('capture-live').hidden=true;
+  }
   $('capture-preview').classList.toggle('mirrored',!!info.mirror);
   $('camera-current').textContent=state.camera?((info.source==='file'?'本地视频':info.label||'摄像头')+' · '+info.width+' × '+info.height+(info.fps?' · '+Math.round(info.fps)+' 帧/秒':'')+(state.paused?' · 已暂停':'')):'视频输入尚未开启';
-  $('tracking-current').textContent=state.tracking?(state.paused?'视频已暂停 · 恢复视频后继续追踪':info.detected?'已检测到人物 · 识别约 '+info.trackingFps+' 帧/秒':'追踪已启用 · 请面向摄像头进入取景范围'):'动捕尚未开启 · 停止动捕会保留视频输入';
+  $('tracking-current').textContent=state.tracking?(state.paused?'视频已暂停 · 恢复视频后继续追踪':info.detected?'已检测到人物'+(info.trackingFps?' · 追踪更新约 '+info.trackingFps+' 次/秒':''):'追踪已启用 · 请面向摄像头进入取景范围'):'动捕尚未开启 · 停止动捕会保留视频输入';
   const error=captureUiError||info.error;
   $('capture-error').hidden=!error;$('capture-error').textContent=error||'';
   if(state.staticModel)$('tracking-guide').textContent='当前模型仅供展示，请先切换带人形骨骼的人物。';
@@ -77,4 +79,10 @@ $('tracking-stop').addEventListener('click',()=>runCapture('capture-stop',{targe
 $('camera-stop').addEventListener('click',()=>runCapture('capture-stop',{target:'camera'},'视频输入已关闭，动捕已停止'));
 $('tracking-mode').addEventListener('change',renderCapturePanel);
 $('capture-next').addEventListener('click',()=>navigate('tracking'));
+window.studio.onCapturePreview(({id,src})=>{
+  if(!state.camera||state.capture?.inputId!==id||!['camera','tracking'].includes(page))return;
+  previewInputId=id;
+  $('capture-preview').src=src;
+  $('capture-preview').hidden=false;$('capture-empty').hidden=true;$('capture-live').hidden=false;
+});
 window.studio.onState(refreshCaptureNavigation);refreshCaptureNavigation();
