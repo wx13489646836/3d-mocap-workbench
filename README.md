@@ -89,6 +89,14 @@
 
 虚拟相机采用 [Unity Capture](https://github.com/schellingb/UnityCapture) 的 MIT DirectShow 组件和 [pyvirtualcam](https://github.com/letmaik/pyvirtualcam)。仅注册到当前 Windows 用户，名称与 DroidCam 输入分开，不依赖 OBS 自己的虚拟相机。运行依赖安装在 `runtime/virtual-camera/python`，使用项目内 `runtime/python311/python.exe`。设备停止时接收端可能显示驱动的待机提示。测试通过真实 DirectShow 接收端验证 720p、1080p、纯色背景、暂停预览和最小化、停止重开，并检查八种页面/窗口组合。结果见 `output-test-result.json` 与 `output-pixel-check.json`；本机未安装 OBS，未验证 OBS 界面中的实际添加操作。
 
+## 局域网视频输出
+
+在「视频输出 → 局域网视频输出」里选择接收电脑所在的 Wi-Fi 或网线接口，点击「开启局域网输出」，然后复制观看链接。接收端用浏览器打开链接即可观看。
+
+网页提供最高 1280 像素宽、约 15 帧/秒的 MJPEG 人物画面，无音频。暂停本地预览或最小化工作台时，输出继续运行。停止输出或退出工作台会断开观看连接，下次开启会生成新链接。局域网输出和 Avatar Camera 可以独立开启。
+
+如果另一台电脑打不开链接，检查两台电脑能否互通，以及 Windows 防火墙是否允许该工作台在专用网络接收入站 TCP 8765 连接。观看链接通过 HTTP 提供，请只在信任的网络中分享。
+
 ## 更适合操作者和 AI
 
 人物预览支持原生视角操作：左键拖动旋转、右键拖动平移、滚轮向上拉近和向下拉远，工具栏“视角复位”恢复默认镜头。方向键旋转，Shift+方向键平移，+/- 缩放，Home 复位。输入直接传到原引擎相机控制器，预览与虚拟相机输出共享同一视角；预览缩放和留白区域的坐标映射已处理。拖动结束、失焦及取消时会释放鼠标状态。操作不启用摄像头或追踪。结果见 `viewport-test-result.json`。

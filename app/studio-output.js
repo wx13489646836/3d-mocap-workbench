@@ -1,4 +1,6 @@
 let outputPending=false,backgroundDirty=false;
+let lanPending = false;
+let lanInterfacesKey = '';
 function renderStudioOutput(){
   $('background-card').hidden=page!=='settings';$('output-card').hidden=page!=='output';$('main-controls').hidden=page==='output';
   const bg=state.background||{enabled:false,color:'#00ff00'};
@@ -7,7 +9,7 @@ function renderStudioOutput(){
   if(!backgroundDirty){$('background-color').value=bg.color;$('background-hex').value=bg.color.toUpperCase();}
   $('background-status').textContent=bg.enabled?'已启用 · '+bg.color.toUpperCase():'原场景背景';
   const out=state.videoOutput||{};
-  $('output-nav-status').textContent=out.running?'开启':'关闭';
+  $('output-nav-status').textContent=out.running||state.lanOutput?.url?'开启':'关闭';
   $('output-status').textContent=out.starting?'正在开启':out.running?'输出中':'未开启';
   $('output-fps').textContent=out.running?(out.fps||0)+' / 30 帧/秒':'30 帧/秒';
   $('output-toggle').textContent=out.starting?'正在开启…':out.running?'停止视频输出':'开启视频输出';
@@ -15,6 +17,31 @@ function renderStudioOutput(){
   $('output-toggle').setAttribute('aria-pressed',String(!!out.running));
   $('output-resolution').disabled=outputPending||out.running||out.starting;
   $('output-error').hidden=!out.error;$('output-error').textContent=out.error||'';
+  renderLanOutput();
+}
+function renderLanOutput() {
+  const { url = '', starting = false, interfaces = [], error = '' } = state.lanOutput || {};
+  $('lan-output-card').hidden = page !== 'output';
+  const address = $('lan-output-address');
+  const interfacesKey = JSON.stringify(interfaces);
+  if (interfacesKey !== lanInterfacesKey) {
+    const selected = address.value;
+    address.replaceChildren(new Option(interfaces.length ? '请选择网络' : '未找到可用网络', ''),
+      ...interfaces.map(({name, address}) => new Option(name + ' · ' + address, address)));
+    if (interfaces.some(entry => entry.address === selected)) address.value = selected;
+    else if (interfaces.length === 1) address.value = interfaces[0].address;
+    lanInterfacesKey = interfacesKey;
+  }
+  address.disabled = Boolean(url) || lanPending || starting || !interfaces.length;
+  const toggle = $('lan-output-toggle');
+  toggle.disabled = lanPending || starting || (!url && (!state.ready || !address.value));
+  toggle.textContent = url ? '停止局域网输出' : '开启局域网输出';
+  toggle.setAttribute('aria-pressed', String(Boolean(url)));
+  $('lan-output-status').textContent = url ? '输出中' : starting || lanPending ? '处理中' : '未开启';
+  $('lan-output-link-panel').hidden = !url;
+  if ($('lan-output-link').value !== url) $('lan-output-link').value = url;
+  $('lan-output-error').hidden = !error;
+  $('lan-output-error').textContent = error;
 }
 async function applyStudioBackground(enabled,color){
   const result=await command('background-set',{enabled,color},enabled?'已应用纯色背景':'已恢复场景背景');
@@ -31,4 +58,20 @@ $('output-toggle').addEventListener('click',async()=>{
   try{await command(state.videoOutput?.running?'output-stop':'output-start',{resolution:$('output-resolution').value},state.videoOutput?.running?'视频输出已停止':'视频输出已开启');}
   finally{outputPending=false;renderStudioOutput();}
 });
+$('lan-output-address').addEventListener('change', renderLanOutput);
+$('lan-output-toggle').addEventListener('click', async () => {
+  if (lanPending) return;
+  lanPending = true;
+  const stopping = Boolean(state.lanOutput?.url);
+  const address = $('lan-output-address').value;
+  renderLanOutput();
+  try {
+    await command(stopping ? 'lan-output-stop' : 'lan-output-start', { address },
+      stopping ? '局域网输出已停止' : '局域网输出已开启');
+  } finally {
+    lanPending = false;
+    renderLanOutput();
+  }
+});
+$('lan-output-copy').addEventListener('click', () => command('lan-output-copy', {}, '已复制观看链接'));
 renderStudioOutput();

@@ -78,6 +78,11 @@ main{padding:24px 24px 10px;display:flex;flex-direction:column;min-height:100dvh
 .background-presets{margin:16px 18px}
 #output-card>.output-field,#output-card>.output-details,#output-card>.output-guide,#output-card>.output-error{margin-left:18px;margin-right:18px}
 #output-card>#output-toggle{width:calc(100% - 36px);margin:0 18px}
+#lan-output-card>.output-field,#lan-output-card>.output-error,#lan-output-link-panel{margin-left:18px;margin-right:18px}
+#lan-output-toggle{width:calc(100% - 36px);min-height:44px;margin:0 18px}
+#lan-output-link-panel:not([hidden]){display:grid;gap:8px}
+#lan-output-link{min-width:0;width:100%;padding:10px;border:1px solid #b8c8dc;border-radius:7px;background:#f7f9fc;color:#173454;font:inherit}
+#lan-output-copy{justify-self:start}
 select:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 /* Browse the full motion collection without changing native menu pages. */
 #menu-options.pose-menu{display:block}

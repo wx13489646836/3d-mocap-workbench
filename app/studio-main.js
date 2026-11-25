@@ -7,13 +7,14 @@ module.exports = ({electron, app, engine}) => {
   engine.setOpacity(0);
   engine.setIgnoreMouseEvents(true);
   engine.showInactive();
-  const {BrowserWindow, ipcMain, dialog} = electron;
+  const {BrowserWindow, ipcMain, dialog, clipboard} = electron;
   const appIcon=path.join(__dirname,'../assets/app-icon.ico');
   app.setAppUserModelId('cn.avatar.workbench');
   app.setName('3D动捕工作台');
   engine.setIcon(appIcon);
   const builtinModels=JSON.parse(fs.readFileSync(path.join(__dirname,'../models/catalog.json'),'utf8'));
   const videoOutput=require('./video-output')();
+  const lanOutput = require('./lan-video-output')();
   const settingsFile=path.join(__dirname,'../user-data/studio-settings.json');
   let background={enabled:false,color:'#00ff00'},backgroundApplied=false;
   try{const saved=JSON.parse(fs.readFileSync(settingsFile,'utf8')).background;if(/^#[0-9a-f]{6}$/i.test(saved?.color))background={enabled:saved.enabled===true,color:saved.color};}catch{}
@@ -22,8 +23,8 @@ module.exports = ({electron, app, engine}) => {
   studio.removeMenu();
   studio.loadFile(path.join(__dirname,'studio.html'));
   studio.on('ready-to-show',()=>studio.show());
-  studio.on('closed',()=>{videoOutput.stop();clearInterval(timer);clearInterval(frameTimer);app.quit();});
-  app.on('before-quit',()=>videoOutput.stop());
+  studio.on('closed',()=>{videoOutput.stop();lanOutput.stop();clearInterval(timer);clearInterval(frameTimer);app.quit();});
+  app.on('before-quit',()=>{videoOutput.stop();lanOutput.stop();});
   engine.webContents.setBackgroundThrottling(false);
   let inFlight=false,frameInFlight=false,lastState={ready:false},captureAllowed=false,legacyMode=false,previewPaused=false,awaitingFrame=0,frameId=0,frameSentAt=0;
   const metrics={frames:0,acks:0,captureMs:[],encodeMs:[],bytes:0};
@@ -40,8 +41,9 @@ module.exports = ({electron, app, engine}) => {
   };
   const invoke = async(command,payload={}) => {
     const result=await engine.webContents.executeJavaScript(`window.XRStudio ? window.XRStudio.dispatch(${JSON.stringify(command)},${JSON.stringify({...payload,captureAllowed,legacyMode})}) : ({ready:false})`);
-    if(command==='state')return {...result,legacyOpen:legacyMode,background,videoOutput:videoOutput.state()};
-    if(result?.state)Object.assign(result.state,{legacyOpen:legacyMode,background,videoOutput:videoOutput.state()});
+    const outputState = {legacyOpen:legacyMode,background,videoOutput:videoOutput.state(),lanOutput:lanOutput.state()};
+    if(command==='state')return {...result,...outputState};
+    if(result?.state)Object.assign(result.state,outputState);
     return result;
   };
   const setLegacy=open=>{
@@ -49,6 +51,7 @@ module.exports = ({electron, app, engine}) => {
     if(open)engine.show();else{engine.showInactive();studio.focus();}
   };
   const actions = new Set(['state','section','choose','dismiss','pause','avatar','capture-access','import','legacy','engine-key','preview-pause','visual-set','visual-close','capture-stop','model-select','background-set','output-start','output-stop','pose-select','view-reset','camera-list','camera-start','camera-file','tracking-start']);
+  for (const action of ['lan-output-start', 'lan-output-stop', 'lan-output-copy']) actions.add(action);
   ipcMain.on('studio:viewport-input',(event,input)=>{
     if(event.sender!==studio.webContents||!lastState.ready||engine.isDestroyed()||legacyMode)return;
     if(!['mouseDown','mouseMove','mouseUp','mouseWheel'].includes(input?.type)||!Number.isFinite(input.u)||!Number.isFinite(input.v))return;
@@ -78,6 +81,21 @@ module.exports = ({electron, app, engine}) => {
       await videoOutput.start(payload.resolution);return {ok:true,state:await invoke('state')};
     }
     if(command==='output-stop'){videoOutput.stop();return {ok:true,state:await invoke('state')};}
+    if (command === 'lan-output-start') {
+      if (!lastState.ready) throw Error('人物引擎就绪后才能开启局域网视频输出');
+      await lanOutput.start(payload.address);
+      return {ok:true,state:await invoke('state')};
+    }
+    if (command === 'lan-output-stop') {
+      lanOutput.stop();
+      return {ok:true,state:await invoke('state')};
+    }
+    if (command === 'lan-output-copy') {
+      const { url } = lanOutput.state();
+      if (!url) throw Error('请先开启局域网视频输出');
+      clipboard.writeText(url);
+      return {ok:true};
+    }
     if(command==='model-select'){
       const model=builtinModels.find(m=>m.id===payload.id);if(!model)throw Error('人物选项无效');
       return invoke(command,{id:model.id,file:model.file?path.join(__dirname,'../models',model.file):null});
@@ -134,17 +152,19 @@ module.exports = ({electron, app, engine}) => {
       engine.webContents.beginFrameSubscription(false,frame=>{
         lastSubscriptionAt=Date.now();
         videoOutput.send(frame);
+        lanOutput.send(frame);
         if(baselineMode||!canSend())return;
         sendFrame(frame,0);
       });
     }
-    if(!canSend()&&!videoOutput.wantsFrame())return;
+    if(!canSend()&&!videoOutput.wantsFrame()&&!lanOutput.wantsFrame())return;
     if(!baselineMode&&subscriptionActive&&Date.now()-lastSubscriptionAt<1000)return;
     frameInFlight=true;
     try{
       const start=performance.now();
       const frame=await engine.webContents.capturePage(undefined,{stayHidden:true,stayAwake:true});
       videoOutput.send(frame);
+      lanOutput.send(frame);
       if(canSend())sendFrame(frame,performance.now()-start);
     }catch(error){if(!studio.isDestroyed())studio.webContents.send('studio:state',{...lastState,error:error.message});}
     finally{frameInFlight=false;}

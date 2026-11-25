@@ -1,7 +1,7 @@
 const $=id=>document.getElementById(id);
 let importBusy=false;
 let previewFrames=0,previewFpsStarted=performance.now();
-const pages={output:['视频输出','通过虚拟相机将人物画面发送到 OBS。'],overview:['总览','人物、输入与输出的状态，一眼看清。'],model:['人物与模型','导入人物和动作，管理当前出镜角色。'],pose:['动作与姿态','用有名称的按钮选择姿态和动画。'],settings:['场景与设置','调整背景、灯光、视觉效果与显示方式。'],camera:['视频输入','选择摄像头，确认画面后开启动作捕捉。'],tracking:['动作捕捉','选择追踪模式，让人物跟随你的动作。'],vmc:['VMC 连接','向兼容软件发送动作，或接收外部动作数据。']};
+const pages={output:['视频输出','将人物画面共享到局域网，或输出到本机虚拟相机。'],overview:['总览','人物、输入与输出的状态，一眼看清。'],model:['人物与模型','导入人物和动作，管理当前出镜角色。'],pose:['动作与姿态','用有名称的按钮选择姿态和动画。'],settings:['场景与设置','调整背景、灯光、视觉效果与显示方式。'],camera:['视频输入','选择摄像头，确认画面后开启动作捕捉。'],tracking:['动作捕捉','选择追踪模式，让人物跟随你的动作。'],vmc:['VMC 连接','向兼容软件发送动作，或接收外部动作数据。']};
 let page='overview',state={ready:false},menuSignature='',captureAllowed=false,toastTimer,previewFrozen=false;
 const translations={'Stand relaxed':'放松站姿','Stand simple':'标准站姿','Standby':'待机动作','Happy idle':'轻松待机','I-shaped balance':'单腿平衡','Sit 01':'坐姿一','Sit 02':'坐姿二','Sit 03':'坐姿三','介面及重叠覆盖':'界面与叠加显示','将动作汇出成档案':'导出动作文件','关於 XR Animator':'关于软件'};
 function friendly(text){for(const [from,to] of Object.entries(translations))text=text.replaceAll(from,to);return text.replace(/\(💃➔全身动捕\)/g,'（全身）').replace(/\(🙋➔上半身动捕\)/g,'（上半身）').replace(/\(🙋\/🦶\)/g,'（上半身 / 足部）').replace(/\(🦶\/🙋\)/g,'（足部 / 上半身）').replace(/\(🙋\)/g,'（上半身）').replace(/[\p{Extended_Pictographic}\uFE0F]/gu,'').replace(/^[┣┗]\s*/,'').trim();}

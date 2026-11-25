@@ -44,6 +44,18 @@
           <div class="background-presets" aria-label="常用背景颜色"><button data-background="#00ff00">绿幕</button><button data-background="#0000ff">蓝幕</button><button data-background="#ffffff">白色</button><button data-background="#000000">黑色</button><button data-background="#20334c">深蓝</button></div>
           <p id="background-status" class="help" role="status">原场景背景</p>
         </section>
+        <section id="lan-output-card" class="control-card" hidden>
+          <div class="panel-heading"><h2>局域网视频输出</h2><span id="lan-output-status" class="tag" role="status">未开启</span></div>
+          <label class="output-field" for="lan-output-address">本机网络<select id="lan-output-address"></select></label>
+          <button id="lan-output-toggle" class="primary" aria-pressed="false">开启局域网输出</button>
+          <p id="lan-output-error" class="output-error" role="alert" hidden></p>
+          <div id="lan-output-link-panel" class="output-guide" hidden>
+            <label for="lan-output-link">观看链接</label>
+            <input id="lan-output-link" type="text" readonly>
+            <button id="lan-output-copy">复制链接</button>
+          </div>
+          <p class="help">选择与接收电脑相连的 Wi-Fi 或有线网络。在另一台电脑的浏览器打开链接即可观看人物画面。</p>
+        </section>
         <section id="output-card" class="control-card" hidden>
           <div class="panel-heading"><h2>虚拟相机</h2><span id="output-status" class="tag" role="status">未开启</span></div>
           <p class="muted">把人物画面发送到 OBS，也可用于支持摄像头输入的软件。</p>
